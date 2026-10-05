@@ -79,12 +79,12 @@
     &quot;assignee&quot;: &quot;Weedman4201985&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Weedman4201985/AWOS-Scripts&quot;,
-    &quot;accountId&quot;: &quot;4f7fa570-af9d-401d-afea-4eeb65c61011&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Weedman4201985/AWOS-Redesign.git",
+    "accountId": "4f7fa570-af9d-401d-afea-4eeb65c61011"
   }
-}</component>
+}]]></component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
@@ -260,7 +260,7 @@
       <workItem from="1791146679956" duration="8314000" />
       <workItem from="1791155308300" duration="236000" />
       <workItem from="1791155555871" duration="138000" />
-      <workItem from="1791155711315" duration="10866000" />
+      <workItem from="1791155711315" duration="12466000" />
     </task>
     <task id="LOCAL-00001" summary="Full commit of entire AWOS redesign project">
       <option name="closed" value="true" />
