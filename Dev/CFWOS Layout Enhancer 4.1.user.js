@@ -248,7 +248,7 @@ if (localStorage.getItem('refreshEnabled') === null) {
 (function () {
     'use strict';
 
-    const DEBUG_MODE = true;
+    const DEBUG_MODE = false;
     let layoutApplied = false;
 
     function findAwosPanel() {
@@ -903,7 +903,7 @@ if (localStorage.getItem('refreshEnabled') === null) {
         const isDark = window.awosDarkMode === true;
 
         // Button describes what clicking it WILL DO
-        btn.textContent = isDark
+        btn.textContent = window.awosDarkMode
             ? '☀️ Light Mode'
             : '🌙 Night Mode';
 
@@ -911,6 +911,7 @@ if (localStorage.getItem('refreshEnabled') === null) {
             btn,
             isDark ? '#444' : '#007bff',
             { color: '#ffffff' }
+
         );
     }
     function injectNightModeAutoToggle(side = 'topRight') {
@@ -996,6 +997,7 @@ if (localStorage.getItem('refreshEnabled') === null) {
             icon.textContent = window.awosDarkAuto ? iconSymbol : '⛔';
             icon.title = tooltipText;
             updateModeIndicator(modeBadge);
+            updateNightModeButton();
         }
         window.updateVisuals = updateVisuals;
 
@@ -1023,6 +1025,7 @@ if (localStorage.getItem('refreshEnabled') === null) {
             );
             updateDebugContent();
             updateVisuals();
+            updateNightModeButton();
         };
 
         // Initial render
@@ -1035,6 +1038,9 @@ if (localStorage.getItem('refreshEnabled') === null) {
         autoToggleWrapper.appendChild(label);
         zone.appendChild(autoToggleWrapper);
         zone.appendChild(modeBadge);
+
+
+
     }
     function applyEnhancements(awosPanel) {
         const isDark = window.awosDarkMode;
@@ -1251,8 +1257,11 @@ if (localStorage.getItem('refreshEnabled') === null) {
                         `via ${window.awosModeSource || 'Boot'}`
                     );
 
+                    updateNightModeButton();
+
                     if (!window.isReportViewer) {
                         setupTopBar();
+
                         injectAutoRefreshToggle('bottomLeft');
                         injectNightModeAutoToggle('topRight');
                         injectNightModeButton('topRight');
@@ -1260,6 +1269,15 @@ if (localStorage.getItem('refreshEnabled') === null) {
                         injectDebugButton('topLeft');
                         injectResetFloaterButton('topLeft');
                         injectNewStationsButton('bottomCenter');
+
+                        applyDarkModeStyles(
+                            window.awosDarkMode,
+                            'post setupTopBar creation mode',
+                            `via ${window.awosModeSource || 'Boot'}`
+                        );
+
+                        updateNightModeButton();
+
                     }
 
                     // If an override is active, force the source to Manual Toggle
