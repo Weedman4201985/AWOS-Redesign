@@ -1,0 +1,20 @@
+VM1960 CFWOS AWOS Core 3.0.user.js:19 🟢 ✅ Starting AWOS cleanup...
+VM1960 CFWOS AWOS Core 3.0.user.js:19 🟢 [AWOS Core] Auto-refresh module initialized. Current state: OFF
+VM1960 CFWOS AWOS Core 3.0.user.js:19 🟢 [AWOS Core] Dummy favicon injected safely
+VM1960 CFWOS AWOS Core 3.0.user.js:27 ℹ️ [Cleanup Suite] Legacy script observer stared
+VM1960 CFWOS AWOS Core 3.0.user.js:19 🟢 🧭 DOM fully loaded
+CFWOS AWOS Logger Utility(Dev copy).user.js:17 🟢 [AWOS] 🚀 AWOS Logger Utility v1.0 initialized
+CFWOS AWOS Compatibility Patch 2.0.user.js:16 🟢 CFWOS AWOS Compatibility Patch is initializing...
+VM1960 CFWOS AWOS Core 3.0.user.js:21 📂 47 mutation(s) detected
+VM1960 CFWOS AWOS Core 3.0.user.js:19 🟢 Running full header/footer purge and layout cleanup...
+VM1960 CFWOS AWOS Core 3.0.user.js:21 📂 Legacy plugin and bloat cleanup
+VM1960 CFWOS AWOS Core 3.0.user.js:21 📂 Removing header and footer elements
+VM1960 CFWOS AWOS Core 3.0.user.js:19 🟢 [findAllMouseoverElements] Found 2 elements with onmouseover
+CFWOS AWOS Layout Enhancer(Dev copy).user.js:26 🎯 Layout Enhancer running after Core cleanup
+VM1960 CFWOS AWOS Core 3.0.user.js:436 📢 Layout Enhancer dispatched successfully
+VM1960 CFWOS AWOS Core 3.0.user.js:21 📂 📂 Removed 4 legacy script(s) on-the-fly
+CFWOS AWOS Compatibility Patch 2.0.user.js:110 ⚙️ Running AWOS Compatibility Patches...
+CFWOS AWOS Compatibility Patch 2.0.user.js:116 ✅ AWOS Compatibility Patch is complete
+CFWOS AWOS Compatibility Patch 2.0.user.js:117 (index)Value(index)Value0'🔕 Zoom Patch: No elements found using "zoom"'1'🔕 Font Patch: No legacy fonts found'2'✅ Cookie Patch: Getter/setter overridden'3'✅ XHR Patch: Logging enabled for all requests'Array(4)
+VM1960 CFWOS AWOS Core 3.0.user.js:19 🟢 🛑 Legacy script observer disconnected
+VM1960 CFWOS AWOS Core 3.0.user.js:19 🟢 Observer disconnected after delay

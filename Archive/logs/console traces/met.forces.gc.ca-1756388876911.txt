@@ -1,0 +1,30 @@
+CFWOS AWOS Core 6.0.user.js:15 Logger script started 172.39999997615814
+CFWOS AWOS Core 6.0.user.js:20 🟢 [AWOS] 🚀 AWOS Logger Utility v1.0 initialized
+CFWOS AWOS Core 6.0.user.js:20 🟢 [AWOS] Logger script finished 172.5
+CFWOS AWOS Core 6.0.user.js:20 🟢 [AWOS] Core script started 172.5999999642372
+CFWOS AWOS Core 6.0.user.js:20 🟢 [AWOS] ✅ Starting AWOS Core...
+CFWOS AWOS Core 6.0.user.js:20 🟢 [AWOS] [findAllMouseoverElements] Found 3 elements with onmouseover
+CFWOS AWOS Core 6.0.user.js:20 🟢 [AWOS] Core script finished 181.89999997615814
+CFWOS AWOS Core 6.0.user.js:20 🟢 [AWOS] 🧭 DOM fully loaded
+CFWOS AWOS Core 6.0.user.js:644 [Storage] Auto-refresh state: false
+CFWOS AWOS Core 6.0.user.js:36 ℹ️ [AWOS INFO] No floater snapshot found in localStorage. Skipping restore.
+CFWOS AWOS Core 6.0.user.js:20 🟢 [AWOS] [AWOS Core] Auto-refresh module initialized. Current state: ON
+CFWOS AWOS Core 6.0.user.js:20 🟢 [AWOS] [AWOS Core] Dummy favicon injected safely
+CFWOS AWOS Core 6.0.user.js:20 🟢 [AWOS] ✅ Body detected — starting CleanupSuite
+CFWOS AWOS Core 6.0.user.js:20 🟢 [AWOS] Cleanup script started at 245.39999997615814
+CFWOS AWOS Core 6.0.user.js:341 ⚙️ Running early Patches...
+CFWOS AWOS Core 6.0.user.js:348 ✅ Early patch is complete
+CFWOS AWOS Core 6.0.user.js:349 Patch finished 279.7999999523163
+CFWOS AWOS Core 6.0.user.js:350 (index)Value(index)Value0'🔕 Zoom Patch: No elements found using "zoom"'1'🔕 Font Patch: No legacy fonts found'2'✅ Cookie Patch: Getter/setter overridden'3'✅ XHR Patch: Logging enabled for all requests'Array(4)
+CFWOS AWOS Core 6.0.user.js:23 📂 [AWOS] 📂 Removed 7 legacy script(s) on-the-fly
+CFWOS AWOS Core 6.0.user.js:20 🟢 [AWOS] 🛑 Legacy script observer disconnected
+CFWOS AWOS Core 6.0.user.js:23 📂 [AWOS] 1 mutation(s) detected
+CFWOS AWOS Core 6.0.user.js:23 📂 [AWOS] Removing header and footer elements
+CFWOS AWOS Core 6.0.user.js:23 📂 [AWOS] Legacy plugin and bloat cleanup
+CFWOS AWOS Layout Enhancer 2.0.user.js:20 🎯 Layout Enhancer running after Core cleanup
+CFWOS AWOS Core 6.0.user.js:20 🟢 [AWOS] 📢 Layout Enhancer dispatched successfully
+CFWOS AWOS Core 6.0.user.js:20 🟢 [AWOS] observeAWOS Observer disconnected after delay
+CFWOS AWOS Core 6.0.user.js:20 🟢 [AWOS] ✅ AWOS Cleanup Suite complete
+CFWOS AWOS Core 6.0.user.js:20 🟢 [AWOS] Cleanup script finished 1570.8999999761581
+CFWOS AWOS Core 6.0.user.js:36 ℹ️ [AWOS INFO] [CleanupSuite] CFWOS Cleanup Suite complete.
+CFWOS AWOS Core 6.0.user.js:20 🟢 [AWOS] [AWOS Core] Auto-refresh disabled by user

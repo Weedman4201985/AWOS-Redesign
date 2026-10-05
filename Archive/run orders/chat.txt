@@ -1,0 +1,82 @@
+LocalHost common_jquery.js
+
+Response Headers:
+
+HTTP/1.1 200 OK
+Date: Fri, 29 Aug 2025 00:48:18 GMT
+Server: Apache/2.4.62 (Debian)
+Vary: Authenticate,Accept-Encoding
+Last-Modified: Thu, 24 Jul 2025 01:42:50 GMT
+ETag: "11686-63aa2f16f9a80-gzip"
+Accept-Ranges: bytes
+Cache-Control: max-age=604800, public
+Expires: Fri, 05 Sep 2025 00:48:18 GMT
+Content-Encoding: gzip
+X-Metweb-Host: ytrbrf1
+Access-Control-Allow-Credentials: true
+Access-Control-Allow-Origin: *
+Content-Length: 18752
+Keep-Alive: timeout=5, max=97
+Connection: Keep-Alive
+Content-Type: application/javascript
+
+
+
+
+Requst headers:
+
+GET /2.20250704.0.24/scripts/common_jquery.js HTTP/1.1
+Host: localhost
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0
+Accept: */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br, zstd
+DNT: 1
+Connection: keep-alive
+Referer: http://localhost/english/AWOS/?id=CYTR
+Cookie: metweb_session2=vAu44mIq7bNo7xRi4%2FL0QwfbGWVQ6946iKATMVi%2FfK664T6f1c7XMSuUhCYw8CdXnT8mKhmU0TqHsqLYLOIqgRdLwAdzFJSsaqFM0TO%2FMy98Lobgw81H4qZlZsUY3JZMjz0j20AxNOPHUUc3827E%2BGpWWFF5ES%2FG4dbLrK6qPMvrhTo2I3vm7zxddbn01V0yhHjhcEvEEaVBTX4wloLReyRikq53i3of0ZgxLRwYHnU%3D; metweb_settings=setting_norefresh&0
+Sec-Fetch-Dest: script
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Site: same-origin
+
+
+Web version common_jquery
+
+Response Headers:
+
+HTTP/1.1 200 OK
+Server: nginx
+Date: Fri, 29 Aug 2025 00:48:15 GMT
+Content-Type: application/javascript
+Content-Length: 18752
+Connection: keep-alive
+Vary: Authenticate,Accept-Encoding
+Last-Modified: Sat, 16 Aug 2025 02:09:07 GMT
+ETag: "11686-63c71fdc856c0-gzip"
+Accept-Ranges: bytes
+Cache-Control: max-age=604800, public
+Expires: Fri, 05 Sep 2025 00:48:15 GMT
+Content-Encoding: gzip
+X-Metweb-Host: ytrmw2
+Access-Control-Allow-Credentials: true
+Access-Control-Allow-Origin: *
+X-Cache: MISS from met.forces.gc.ca
+X-Cache-Lookup: HIT from met.forces.gc.ca:20080
+Via: 1.1 met.forces.gc.ca (squid)
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+Request Headers:
+
+GET /2.20250704.0.38/scripts/common_jquery.js HTTP/1.1
+Host: met.forces.gc.ca
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0
+Accept: */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br, zstd
+DNT: 1
+Connection: keep-alive
+Referer: https://met.forces.gc.ca/english/airops/AWOS/?id=CYTR
+Cookie: metweb_settings=setting_norefresh&0
+Sec-Fetch-Dest: script
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Site: same-origin

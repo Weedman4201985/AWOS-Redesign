@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="24fc00a6-105d-480d-9e3e-b135ff8da7a6" name="Changes" comment="Added dev copies for all active userscripts.">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dev/CFWOS AWOS Core 8.3.user.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dev/CFWOS Cleanup Suite 4.user.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dev/CFWOS Floating Panel 6.1.user.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dev/CFWOS Layout Enhancer 4.1.user.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AWOS_redesign_complete_history.tar.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archived scripts/CFWOS AWOS Main scripts/AWOS-CYTR-HTML.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archived scripts/CFWOS AWOS Main scripts/animation.js.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archived scripts/CFWOS AWOS Main scripts/awosinfo.js.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archived scripts/CFWOS AWOS Main scripts/common.js.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archived scripts/CFWOS AWOS Main scripts/dojo.js.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archived scripts/CFWOS AWOS Main scripts/jquery-ui-slider-pips.js.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archived scripts/CFWOS AWOS Main scripts/jquery-ui.min.js.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archived scripts/CFWOS AWOS Main scripts/jquery.js.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archived scripts/CFWOS AWOS Main scripts/jquery.min.js.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archived scripts/CFWOS AWOS Main scripts/jquery.ui.touch-punch.min.js.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archived scripts/CFWOS AWOS Main scripts/wet-boew.js.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archived scripts/Cleanup Suite/AWOSRestorer.user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archived scripts/Cleanup Suite/CFWOS AWOS Cleanup Suite 1.0.user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archived scripts/Cleanup Suite/CFWOS AWOS Cleanup Suite 2.0.user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archived scripts/Core/CFWOS AWOS Core 3.0.user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archived scripts/Core/CFWOS AWOS Core 4.0 (Cleanup-Stripped Edition).user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archived scripts/Floating Panel/AWOS Floating Panel 3.4 (Resize edition).user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archived scripts/Floating Panel/AWOS Floating Panel 3.5 (Style upgrade).user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archived scripts/Patches and Overrides/CFWOS AWOS Compatibility Patch 2.0(Modal Edition).user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archived scripts/Patches and Overrides/CFWOS WET Plugin Override.user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Archived scripts/Violentmonkey zips/violentmonkey_2025-08-24_12.51.42.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFWOS XML Prototype 0.2.user.js" beforeDir="false" afterPath="$PROJECT_DIR$/Archive/scripts/XML Prototype/CFWOS XML Prototype 0.2.user.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFWOS XML Prototype 0.3(station selection).user.js" beforeDir="false" afterPath="$PROJECT_DIR$/Dev/CFWOS XML Prototype 0.3(station selection).user.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dev/AWOS Floating Panel 4(Debug update).user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dev/AWOS Floating Panel(Dev copy).js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dev/CFWOS AWOS Core 5.0(Dev copy).user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dev/CFWOS AWOS Core 6.0.user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dev/CFWOS AWOS Core 6.1.user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dev/CFWOS AWOS Core(Dev Copy).js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dev/CFWOS AWOS Layout Enhancer(Dev copy).js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dev/CFWOS AWOS Logger Utility(Dev Copy).js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dev/CFWOS Cleanup Suite 1.1(Dev copy).user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dev/CFWOS Cleanup Suite(Dev copy).js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dev/CFWOS Cleanup Suite(new).user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dev/CFWOS Cleanup Suite.user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Working scripts/Run order 1/AWOS Floating Panel 3.5.1 (CLD Detail styling).user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Working scripts/Run order 1/CFWOS AWOS Compatibility Patch 2.0.user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Working scripts/Run order 1/CFWOS AWOS Core 4.1(timepopup).user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Working scripts/Run order 1/CFWOS AWOS Core 6.0.user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Working scripts/Run order 1/CFWOS AWOS Layout Enhancer 2.0.user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Working scripts/Run order 2/AWOS Floating Panel.user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Working scripts/Run order 2/CFWOS Cleanup Suite.user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Working scripts/Run order 2/CFWOS Core 5.0.user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Working scripts/Run order 2/CFWOS Layout Enhancer.user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/violentmonkey_2025-08-29_11.18.19.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/violentmonkey_2025-09-10_19.04.20.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/violentmonkey_2025-09-19_21.06.29.zip" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Weedman4201985&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Weedman4201985/AWOS-Scripts&quot;,
+    &quot;accountId&quot;: &quot;4f7fa570-af9d-401d-afea-4eeb65c61011&quot;
+  }
+}</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0000000000001674" />
+      <entry key="S5" value="1.0000077591508811" />
+      <entry key="S10" value="1.002847480207883" />
+      <entry key="S30" value="1.180603928882279" />
+      <entry key="S60" value="1.623825330100892" />
+      <entry key="M2" value="2.927880174349311" />
+      <entry key="M5" value="8.2382622939442" />
+      <entry key="M10" value="14.570608477385866" />
+      <entry key="M15" value="18.79245613813035" />
+      <entry key="M30" value="26.110234082411438" />
+      <entry key="H1" value="32.11812587734445" />
+      <entry key="H2" value="36.10751886297763" />
+      <entry key="H4" value="38.42655437792191" />
+      <entry key="D1" value="40.55205201949152" />
+      <entry key="W1" value="40.93552205794042" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="3.535768261448627E-250" />
+      <entry key="S2" value="4.336316252430687E-63" />
+      <entry key="S5" value="1.1346146303760028E-25" />
+      <entry key="S10" value="3.368404118237601E-13" />
+      <entry key="S30" value="6.957844681966932E-5" />
+      <entry key="S60" value="0.008341369600950992" />
+      <entry key="M2" value="0.0913310987613255" />
+      <entry key="M5" value="0.38392595478390107" />
+      <entry key="M10" value="0.6196175875359745" />
+      <entry key="M15" value="0.7268015156967129" />
+      <entry key="M30" value="0.8525265483823438" />
+      <entry key="H1" value="0.9233236422741185" />
+      <entry key="H2" value="0.9608973109932809" />
+      <entry key="H4" value="0.9802536972607044" />
+      <entry key="D1" value="0.9966815406205426" />
+      <entry key="W1" value="0.999525258771391" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.006129563264818364" />
+      <entry key="MS500" value="0.36098229888062405" />
+      <entry key="S2" value="0.7751245221018633" />
+      <entry key="S5" value="0.9031337260276353" />
+      <entry key="S10" value="0.9530704052522428" />
+      <entry key="S30" value="1.1604627694464336" />
+      <entry key="S60" value="1.6169543663571602" />
+      <entry key="M2" value="3.0065181403923273" />
+      <entry key="M5" value="8.611023518283435" />
+      <entry key="M10" value="15.18119115762426" />
+      <entry key="M15" value="19.511934491657026" />
+      <entry key="M30" value="26.958215085247677" />
+      <entry key="H1" value="33.03889371758406" />
+      <entry key="H2" value="37.06705735049075" />
+      <entry key="H4" value="39.40610695599883" />
+      <entry key="D1" value="41.54861355517343" />
+      <entry key="W1" value="41.93503009409471" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="31k4uGVOSBJXea9yMl8t45aongV" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "D:/Programing/Work Projects/MET/AWOS website redesign",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "nodejs_package_manager_path": "npm",
+    "python.packages.toolwindow.project.migrated.to.right.top.v2": "true",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
+    "to.speed.mode.migration.done": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Work Projects\MET\AWOS website redesign\AWOS-Scripts-main" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Programing\Work Projects\MET\AWOS website redesign\Archive\scripts\XML Prototype" />
+      <recent name="D:\Programing\Work Projects\MET\AWOS website redesign\Archived scripts\Cleanup Suite" />
+      <recent name="D:\Programing\Work Projects\MET\AWOS website redesign\Archived scripts\Patches and Overrides" />
+      <recent name="D:\Programing\Work Projects\MET\AWOS website redesign\Archived scripts\Core" />
+      <recent name="D:\Programing\Work Projects\MET\AWOS website redesign\Archived scripts\Floating Panel" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <module name="AWOS website redesign" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="DEBUG_JUST_MY_CODE" value="false" />
+      <option name="RUN_TOOL" value="" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="Tox" factoryName="Tox">
+      <module name="AWOS website redesign" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="DEBUG_JUST_MY_CODE" value="false" />
+      <option name="RUN_TOOL" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-WS-262.10968.77" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="24fc00a6-105d-480d-9e3e-b135ff8da7a6" name="Changes" comment="" />
+      <created>1756054957716</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1756054957716</updated>
+      <workItem from="1756054958723" duration="9029000" />
+      <workItem from="1756139648729" duration="8148000" />
+      <workItem from="1756152340481" duration="2200000" />
+      <workItem from="1756161795433" duration="4413000" />
+      <workItem from="1756685434285" duration="118000" />
+      <workItem from="1791146312773" duration="355000" />
+      <workItem from="1791146679956" duration="8314000" />
+      <workItem from="1791155308300" duration="236000" />
+      <workItem from="1791155555871" duration="138000" />
+      <workItem from="1791155711315" duration="10866000" />
+    </task>
+    <task id="LOCAL-00001" summary="Full commit of entire AWOS redesign project">
+      <option name="closed" value="true" />
+      <created>1756139831720</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1756139831720</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Full redesign of project and folder structure">
+      <option name="closed" value="true" />
+      <created>1756149845770</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1756149845770</updated>
+    </task>
+    <task id="LOCAL-00003" summary="commit test">
+      <option name="closed" value="true" />
+      <created>1756150353684</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1756150353684</updated>
+    </task>
+    <task id="LOCAL-00004" summary="commit">
+      <option name="closed" value="true" />
+      <created>1756152616895</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1756152616895</updated>
+    </task>
+    <task id="LOCAL-00005" summary="delete test file">
+      <option name="closed" value="true" />
+      <created>1756153254077</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1756153254077</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Added dev copies for all active userscripts.">
+      <option name="closed" value="true" />
+      <created>1756161596717</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1756161596718</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Full commit of entire AWOS redesign project" />
+    <MESSAGE value="Full redesign of project and folder structure" />
+    <MESSAGE value="commit test" />
+    <MESSAGE value="commit" />
+    <MESSAGE value="delete test file" />
+    <MESSAGE value="Added dev copies for all active userscripts." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added dev copies for all active userscripts." />
+  </component>
+</project>

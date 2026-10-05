@@ -1,0 +1,20 @@
+dojo.addOnLoad(function() {
+	dojo.require("metweb.common");
+	dojo.addOnLoad(function() {
+
+	dojo.query('#awosinfo_selectall').onclick(
+		function(event) {
+			event.preventDefault();
+			dojo.query('input[type="checkbox"][name="id"]').forEach(
+					function(node, index, arr){
+						node.checked = 1;
+					});
+			return;
+		}
+	);		
+
+	
+	});// onload
+});// onload
+
+

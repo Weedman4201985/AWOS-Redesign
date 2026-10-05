@@ -1,0 +1,109 @@
+dojo.addOnLoad(function() {
+
+var _hasSliderResource = 0;
+var ourRotators = dojo.query('div[class="rotator"]');
+if (ourRotators != null && ourRotators.length != 0) {
+	dojo.require("metweb.common");
+	dojo.require("dojo.parser");
+	dojo.require("dijit.registry");
+	dojo.require("dojox.widget.Rotator");
+	dojo.require("dojox.widget.AutoRotator");
+	dojo.addOnLoad(function() {
+	dojo.require("dojox.widget.rotator.Controller");
+
+	ourRotators.forEach(
+		function(n, i, a) {
+			var _prefix = n.id.match(/(.*)_rotator$/)[1];
+			var _hs_div = dojo.byId(_prefix+"_slider_div");
+			var _hs;
+			var options;
+			if (_hs_div) {
+				options = { transition: "dojox.widget.rotator.swap",
+								transitionParams: "continuous:true,quick:true,duration:0",
+								duration: 500,pauseOnManualChange: false,
+								autoStart: 0};
+			} else {
+				options = { transition: "dojox.widget.rotator.swap",
+								transitionParams: "continuous:true,quick:true,duration:0",
+								duration: 500,pauseOnManualChange: true,
+								autoStart: 0};
+			}
+			var _r  = new dojox.widget.AutoRotator( options , n );
+			var _panes = dojo.query("div[prefix="+_prefix+"][class='pane']",n);
+			var _numpanes = _panes.length;
+			if (_hs_div) {  
+				// only add slider if it's div is there.
+				if (0 == _hasSliderResource) {
+					dojo.require("dijit.form.HorizontalSlider");
+					dojo.addOnLoad(function() {
+							_hasSliderResource = 1;
+					});
+				}
+				var _focusframe = dojo.byId(_prefix+"_slider_focusframe");
+				var _focusframe_value = 0;
+				if (_focusframe) {
+					_focusframe_value = parseInt(_focusframe.value,10);
+					dojo.publish(_prefix+'_rotator/rotator/control', ['go',_focusframe_value]);
+				}
+				_hs = new dijit.form.HorizontalSlider({
+							name: _prefix+"_slider",
+							id: _prefix+"_slider",
+							value: _focusframe_value,
+							minimum: 0,
+							maximum: _numpanes-1,
+							intermediateChanges: true, 
+							showButtons: true,
+							//discreteValues makes slider nav positional instead of continuous
+							discreteValues: _numpanes, 
+							clickSelect: false,
+							style: "width: 590px",
+							class: "img-responsive",
+							onChange: function(value){
+								var slidername = this.name;
+								var _p = slidername.match(/(.*)_slider$/)[1];
+								dojo.publish(_p+'_rotator/rotator/control', ['go',value]);
+							} 
+				}, _prefix+"_slider_div").startup();
+
+				//subscribe to events of the rotator, such that as it changes panes,
+				//the slider marker position updates
+				dojo.subscribe(n.id+'/rotator/update', function(message, rInstance) { 
+					//alert(window.JSON.stringify(message,null," "));
+					//alert(window.JSON.stringify(rInstance,null," "));
+					if (message == "onAfterTransition") {
+						//alert(window.JSON.stringify(rInstance,null," "));
+						var _pfx = rInstance.id.match(/(.*)_rotator$/)[1];
+						var _sldrname = _pfx+"_slider";
+						// this is considered a manual-change:
+						//rInstance.pauseOnManualChange = false;
+						dijit.registry.byId(_sldrname).attr('value',rInstance.idx);
+						//rInstance.pauseOnManualChange = true;
+					}
+				});
+			} //hs div
+		}); //forEach
+
+		// When user clicks anywhere on the slider, stop the anim
+		dojo.query("table[id$=_slider]").forEach(function(n,i,a) {
+			dojo.connect(n,"onclick", function(event){
+				var _p = n.id.match(/(.*)_slider$/)[1];
+				dojo.publish(_p+'_rotator/rotator/control', ['pause']); 
+			});
+		});
+
+		// triggered when all elements of page are finished loading.
+		// now we will trigger the animations, only if the product is configed to autostart.
+		window.onload = function() {
+			dojo.query('input[id$="_slider_autostart"]').forEach(function(n, i, a) {
+				var _autostart_value = (parseInt(n.value,10)!=0)?1:0;
+  				if (_autostart_value) {
+					var _p = n.id.match(/(.*)_slider_autostart$/)[1];
+					dojo.publish(_p+'_rotator/rotator/control', ['play']);	
+				}
+			});
+		};
+
+	}); //onLoad
+} //if ourRotators
+}); //onLoad
+

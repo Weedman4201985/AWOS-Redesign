@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- TEMPLATE SCRIPTS/CSS BEGIN | DEBUT DES SCRIPTS/CSS DU GABARIT-->
+<script type="text/javascript" nonce="dbb239da8b4846898669f470e8c" src="//local.adguard.org?ts=1756079910289&amp;type=content-script&amp;dmn=met.forces.gc.ca&amp;url=https%3A%2F%2Fmet.forces.gc.ca%2Fenglish%2Fairops%2FAWOS%2F%3Fid%3DCYTR&amp;app=msedge.exe&amp;css=3&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1&amp;stealth=1&amp;st-dnt"></script><script type="text/javascript" nonce="dbb239da8b4846898669f470e8c" src="//local.adguard.org?ts=1756079910289&amp;name=AdGuard%20Extra&amp;name=AdGuard%20Popup%20Blocker&amp;type=user-script"></script><link href="/2.20250704.0.38/scripts/dijit/themes/nihilo/nihilo.css" media="all" rel="stylesheet" type="text/css"><link href="/2.20250704.0.38/scripts/dojox/form/resources/RangeSlider.css" media="all" rel="stylesheet" type="text/css"><link href="/2.20250704.0.38/scripts/dojox/grid/resources/nihiloGrid.css" media="all" rel="stylesheet" type="text/css"><!-- TEMPLATE SCRIPTS/CSS END | FIN DES SCRIPTS/CSS DU GABARIT-->
+<!-- CUSTOM SCRIPTS/CSS BEGIN | DEBUT DES SCRIPTS/CSS PERSONNALISES-->
+<link href="/2.20250704.0.38/style_sheets/jquery-ui.css" media="all" rel="stylesheet" type="text/css"><link href="/2.20250704.0.38/style_sheets/jquery-ui-slider-pips.css" media="all" rel="stylesheet" type="text/css"><link href="/2.20250704.0.38/style_sheets/institution.css" media="all" rel="stylesheet" type="text/css"><link href="/2.20250704.0.38/style_sheets/mobile_content.css" media="handheld" rel="stylesheet" type="text/css"><!--[if IE]>
+<link href="/2.20250704.0.38/style_sheets/iehacks.css" media="all" rel="stylesheet" type="text/css"><![endif]-->
+<!--TEMPLATE PRINT CSS BEGINS | DEBUT DU CSS DU GABARIT POUR L'IMPRESSION-->
+<link href="/2.20250704.0.38/style_sheets/pf-if.css" media="print" rel="stylesheet" type="text/css"><!--TEMPLATE PRINT CSS ENDS | FIN DU CSS DU GABARIT POUR L'IMPRESSION-->
+<!--NEW CSS BEGINS | DEBUT DU NOUVEAU-->
+<link href="/2.20250704.0.38/style_sheets/theme.css" media="all" rel="stylesheet" type="text/css"><link href="/2.20250704.0.38/style_sheets/theme_edits.css" media="all" rel="stylesheet" type="text/css"><link href="/2.20250704.0.38/style_sheets/ol.css" media="all" rel="stylesheet" type="text/css"><!--NEW CSS ENDS | FIN DU NOUVEAU-->
+	<script type="text/javascript">
+	/* <![CDATA[ */
+		var djConfig = {
+			ob_screen: 0,
+			modulePaths: {
+				'metweb.rules': '../rules',
+				'metweb.common': '../common',
+				'metweb.science': '../science'
+			}
+		};
+	/* ]]> */
+	</script>
+	<script src="/2.20250704.0.38/scripts/dojo/dojo.js" type="text/javascript"></script>
+	<script src="/2.20250704.0.38/scripts/animation.js" type="text/javascript"></script>
+	<script src="/2.20250704.0.38/scripts/awosinfo.js" type="text/javascript"></script>
+<link href="/2.20250704.0.38/style_sheets/mobile_content.css" media="all and (max-width:480px)" rel="stylesheet" type="text/css">
+<meta content="CF Weather Office" name="GENERATOR"><meta charset="iso-8859-1" content="text/html;" http-equiv="Content-Type"><meta content="Government of Canada, Environment Canada, DWS" name="Author"><meta content="Government of Canada, Environment Canada, DWS" name="Originator"><meta content="National Defence Meteorology Oceanography" name="Controlled_Subject_Terms"><meta content="2025-08-25 00:09 UTC" name="Date_Modified"><meta content="en" name="Language_of_resource"><meta content="AWOS Info @ CF Weather Office" name="Title"><meta content="" name="Keywords"><meta content="" name="Description"><meta content="telephone=no" name="format-detection"><meta content="none" http-equiv="x-rim-auto-match"><meta content="2.20250704.0.38" name="mwversion"><meta content="307200" name="maxrequestsize"><title>AWOS Info @ CF Weather Office</title></head><body class="nihilo" id="body"><input default="60000" id="expire" name="expire" type="hidden" value="60000"><input default="Refresh" id="msg_refresh" name="msg_refresh" type="hidden" value="Refresh"><input default="Enabled" id="msg_enabled" name="msg_enabled" type="hidden" value="Enabled"><input default="Disabled" id="msg_disabled" name="msg_disabled" type="hidden" value="Disabled"><input default="disable" id="msg_disable" name="msg_disable" type="hidden" value="disable"><input default="enable" id="msg_enable" name="msg_enable" type="hidden" value="enable"><!-- noindex-->
+<header id="head" role="banner"><!-- 
+BANNER HEADER --><div id="wb-bnr"><div id="wb-bar"><div class="container"><div class="row"><img alt="Government of Canada" id="gcwu-sig" src="/meticons/dnd-eng.png"><section id="wb-lng" style="width: 104px"><h2>Language Selection</h2><ul class="list-inline"><li><a href="/francais/airops/AWOS/?id=CYTR" lang="fr" title="Français" xml:lang="fr">Français</a></li></ul></section><section class="wb-mb-links col-xs-12 visible-sm visible-xs" id="wb-glb-mn"><div><h2>Search and menus<a class="slideout-lang" href="/francais/airops/AWOS/?id=CYTR" lang="fr" title="Français" xml:lang="fr">Français</a></h2><ul class="pnl-btn list-inline text-right"><li><a aria-controls="mb-pnl" class="overlay-lnk btn btn-sm btn-default" href="#mb-pnl" role="button" title="Search and menus"><span class="glyphicon glyphicon-search"><span class="glyphicon glyphicon-th-list"><span class="wb-inv">Search and menus</span></span></span></a></li></ul><div id="mb-pnl"></div>
+</div>
+</section></div>
+</div>
+</div>
+<div class="container"><div class="row"><div class="col-md-12" id="wb-sttl"><a href="/english/"><span>CF Weather Office</span></a><img alt="Government of Canada" class="visible-sm visible-xs col-xs-4 img-responsive" id="secondimg" src="/meticons/dndw-eng.png"><img alt="Symbol of the Government of Canada" class="visible-md visible-lg" id="wmms" src="/meticons/wmms-intra.png"><img alt="Symbol of the Government of Canada" class="visible-sm visible-xs col-xs-3 img-responsive" id="firstimg" src="/meticons/wmms_w.png"><section class="visible-md visible-lg" id="wb-srch"><h2>Search</h2><form action="/english/Search/" class="form-inline" enctype="application/x-www-form-urlencoded" method="GET"><div class="form-group"><label for="wb-srch-q">Search Website</label><input alt="Search this website" class="form-control custom-placeholder" id="wb-srch-q" maxlength="150" name="mask" placeholder="Search this website" size="27" style="padding: 5px 5px 5px 5px;" title="Search this website" type="text" value=""><input name="q" type="hidden" value="EDIT"></div>
+<button class="btn btn-default" id="wb-srch-sub" type="submit">Search</button></form><div class="visible-sm visible-xs mrgn-sm-top"><form action="/english/WxSearch/" alt="Type an identifier or city name for a quick weather search." class="form-inline" enctype="application/x-www-form-urlencoded" method="GET" name="wxsearch_mask" title="Type an identifier or city name for a quick weather search."><div class="form-group"><input alt="Request weather by ICAO, WMO or common name" class="form-control custom-placeholder" id="wb-srch-q" maxlength="150" name="wxsearch_mask" placeholder="Request weather" size="27" type="search" value=""></div>
+<input class="btn btn-sm btn-default mrgn-bttm-sm btn btn-default " id="wb-srch-sub" name="wb-srch-sub" style="width:77px;" type="submit" value="Go"></form></div>
+</section></div>
+</div>
+</div>
+<div class="hidden" id="warning_banner" style="max-height:20px"><div class="alert alert-warning" id="warning_banner" style="padding: 2px;"><p style="text-align:center;"><a href="/english/New/" style="text-decoration: none;">Warning:Please click here</a></p>
+</div>
+</div>
+</div>
+<!-- 
+BANNER ENDS --><!-- SKIP NAVIGATION BEGINS | DEBUT DU SAUT DE NAVIGATION --><div class="navaid"><a href="#cont">Skip to content</a><a href="#il">Skip to institutional links</a></div>
+<!-- SKIP NAVIGATION ENDS | FINI DU SAUT DE NAVIGATION -->
+<!--TOP MENU BEGINS | DEBUT DU MENU SOMMET-->
+<nav class="wb-menu visible-md visible-lg" data-trgt="mb-pnl" id="wb-sm" role="navigation" typeof="SiteNavigationElement"><div class="pnl-strt container visible-md visible-lg nvbar"><h2>Menu</h2><div class="row"><ul class="list-inline menu" role="menubar">
+<li><a class="item" href="#lore">CFWOS Information</a><ul class="sm list-unstyled" id="lore" role="menu"><li><a class="" href="/english/files/about_cfwxo_en.pdf" role="menuitem" title="About">About</a></li>
+<li><a class="" href="/english/New/" role="menuitem" title="What&#39;s New">What's New</a></li>
+</ul></li><li><a class="item" href="#lore">Key Operations</a><ul class="sm list-unstyled" id="lore" role="menu"><li><a class="" href="/english/deployed/CurrentOps/opsOP_REASSURANCE/" role="menuitem" title="Op REASSURANCE">Op REASSURANCE</a></li>
+<li><a class="" href="/english/deployed/CurrentOps/staticImpact/" role="menuitem" title="Op IMPACT">Op IMPACT</a></li>
+<li><a class="" href="/english/deployed/CurrentOps/opsOP_UNIFIER_22/All/" role="menuitem" title="Op UNIFIER">Op UNIFIER</a></li>
+<li><a class="" href="/english/deployed/CurrentOps/opsOp_Niberius/All" role="menuitem" title="Op NABERIUS">Op NABERIUS</a></li>
+<li><a class="" href="/english/deployed/CurrentOps/opsOp_PRESENCE/" role="menuitem" title="Op PRESENCE">Op PRESENCE</a></li>
+<li><a class="" href="/english/deployed/CurrentOps/opsOP_VECTOR/All" role="menuitem" title="Op VECTOR">Op VECTOR</a></li>
+<li><a class="" href="/english/deployed/CurrentOps/opsHaiti_Deployed/All" role="menuitem" title="Op GLOBE HAITI 24">Op GLOBE HAITI 24</a></li>
+</ul></li><li><a class="item" href="#lore">Key Events</a><ul class="sm list-unstyled" id="lore" role="menu"><li><a class="" href="/english/deployed/CurrentOps/opsHaiti_Ops/All" role="menuitem" title="Haïti">Haïti</a></li>
+<li><a class="" href="/english/deployed/CurrentOps/opsIndonesia/" role="menuitem" title="Indonesia Volcano">Indonesia Volcano</a></li>
+<li><a class="" href="/english/deployed/CurrentOps/opsEx_TRIDENT_JUNCTURE/All" role="menuitem" title="Ex TRIDENT JUNCTURE">Ex TRIDENT JUNCTURE</a></li>
+</ul></li><li><a class="" href="/english/files/d2929-Em.pdf" role="menuitem" title="Request For Support">Request For Support</a></li>
+<li><a class="" href="/english/security/" role="menuitem" title="Security and Accounts">Security and Accounts</a></li>
+</ul></div></div></nav><!--TOP MENU ENDS | FIN DU MENU SOMMET-->
+
+<nav id="wb-bc" property="breadcrumb" role="navigation"><div class="container"><div class="row"><ol class="breadcrumb"><li><a href="/english/">CF Weather Office</a></li><li><a href="/english/airops/" title="Met Tech">Met Tech</a></li><li><a href="/english/airops/AWOS/" title="AWOS Info">AWOS Info</a></li><li>Results</li></ol></div></div></nav></header><!--/noindex-->
+<div class="container"><div class="row main_row"><div class="colLayout"><!-- noindex -->
+<nav class="col-md-2 col-md-pull-9 visible-md visible-lg wb-navcurr-inited" id="wb-sec" role="navigation" style="width:20%" typeof="SiteNavigationElement"><h2>Section menu</h2><!--LEFT SIDE MENU BEGINS | DEBUT DU MENU LATERAL GAUCHE--><h1 class="navaid"><a id="il" name="il">Institutional Links</a></h1><div class="menucontent mwwxsearch_item" style="background-color: #ddf"><section id="wb-srch-n"><div class="menulink"><h2>Search</h2><form action="/english/WxSearch/" alt="Type an identifier or city name for a quick weather search." class="form-inline" enctype="application/x-www-form-urlencoded" method="GET" name="wxsearch_mask" title="Type an identifier or city name for a quick weather search."><div class="form-group"><input alt="Request weather by ICAO, WMO or common name" class="form-control custom-placeholder" id="wb-srch-q" maxlength="50" name="wxsearch_mask" placeholder="Request weather" size="10" type="search" value=""></div>
+<input class="btn btn-sm btn-default mrgn-bttm-sm btn btn-default btn-sm" id="wb-srch-sub" name="wb-srch-sub" style="width:auto;" type="submit" value="Go"></form></div>
+</section></div>
+
+<ul class="list-group menu list-unstyled"><li><h3 class="nav">General</h3><ul class="list-group menu list-unstyled">
+<li><a class="list-group-item" href="/english/general/" title="Weather Forecasts and Conditions">CF Sites</a></li>
+<li><a class="list-group-item" href="/english/national/" title="National Weather">National</a></li>
+</ul></li></ul>
+<ul class="list-group menu list-unstyled"><li><h3 class="nav">Operational</h3><ul class="list-group menu list-unstyled">
+<li><a class="list-group-item" href="/english/navy/" title="Navy">Navy</a></li>
+<li><a class="list-group-item" href="/english/army/" title="Army">Army</a></li>
+<li><a class="list-group-item" href="/english/airforce/" title="Air Force">Air Force</a></li>
+<li><a class="list-group-item" href="/english/space/" title="Space">Space</a></li>
+<li><a class="list-group-item" href="/english/deployed/" title="Joint Operations">Joint Ops</a></li>
+<li><a class="list-group-item" href="/english/airops/" title="Met Tech Area">Met Tech</a></li>
+<li><a class="list-group-item" href="/english/aircrew/" title="Air Crew">Air Crew</a></li>
+<li><a class="list-group-item" href="/english/monitoring/" title="Monitoring">Monitoring</a></li>
+</ul></li></ul>
+<ul class="list-group menu list-unstyled"><li><h3 class="nav">Products</h3><ul class="list-group menu list-unstyled">
+<li><a class="list-group-item" href="/english/warnings/" title="Warnings Forecasts">Warnings Forecasts</a></li>
+<li><a class="list-group-item" href="/english/satellite/" title="Satellite Imagery">Satellite</a></li>
+<li><a class="list-group-item" href="/english/radar/" title="RADAR Imagery">RADAR</a></li>
+<li><a class="list-group-item" href="/english/lightning/" title="Lightning Imagery">Lightning</a></li>
+<li><a class="list-group-item" href="/english/charts/" title="Charts">Charts</a></li>
+<li><a class="list-group-item" href="/english/climate/" title="Climate Information">Climate</a></li>
+<li><a class="list-group-item" href="/english/manuals/" title="Manuals">Manuals</a></li>
+<li><a class="list-group-item" href="/english/ocean/" title="Oceanography">Oceanography</a></li>
+<li><a class="list-group-item" href="/english/Notams/" title="NOTAMs">NOTAMs</a></li>
+<li><a class="list-group-item" href="/english/defencewx/" title="Defence Weather Apps">Defence Weather Apps</a></li>
+<li><a class="list-group-item" href="/english/deployed/Watchs/watchCBRN_Messages/All/" title="CBRN">CBRN</a></li>
+<li><a class="list-group-item" href="/english/artillery/" title="Artillery">Artillery</a></li>
+</ul></li></ul>
+<!-- SETTINGS MENU -->
+<ul class="list-group menu list-unstyled mwactions_menu"><li><h3>Settings</h3><ul class="list-group menu list-unstyled"><li><a class="list-group-item" href="" name="setting_norefresh" rel="nofollow" title="Refresh">Refresh</a></li></ul></li></ul><!-- ACTION MENU -->
+<ul class="list-group menu list-unstyled mwactions_menu"><li><h3>Actions</h3><ul class="list-group menu list-unstyled"><li><a class="list-group-item" href="/english/airops/AWOS/login" rel="nofollow" title="Login">Login</a></li><li><a class="list-group-item" href="/english/airops/AWOS/Download/?id=CYTR" rel="nofollow" title="Download ZIP">Download ZIP</a></li><li><a class="list-group-item" href="/english/airops/AWOS/Download/?dldfmt=pdf&amp;id=CYTR" rel="nofollow" title="Download PDF">Download PDF</a></li></ul></li></ul><!--LEFT SIDE MENU ENDS | FIN DU MENU LATERAL GAUCHE-->
+</nav><!--/noindex--><div class="container col-md-9"><main class="col-md-push-3" property="mainContentOfPage" role="main" style="margin-right:-10px;"><h1 class="alignCenter">AWOS Info</h1>
+<div class="mwitem mwtypeawos col-xs-12 nopad" id="mwitem2"><a name="item2"></a><form action="/english/airops/AWOS/" class="form-inline" enctype="application/x-www-form-urlencoded" method="GET"><div><input class="btn btn-sm btn-primary mrgn-bttm-sm" id="base_id" style="margin-right: 10px;" type="submit" value="New Stations"></div>
+</form>
+<table class="mwtrends"><colgroup><col width="60%"><col width="40%"></colgroup>
+<tr align="center" class="noWrap" valign="top"><th class="noWrap" colspan="2"><p class="mwconditions_temperature">CYTR - Trenton ON CAN<br>44'07'09N 77'31'42W 283ft 86.3m<br>UNCERTIFIED</p>
+</th></tr>
+<tr align="center" class="noWrap" valign="top"><td class="mwwrap" colspan="2"><p class="mwconditions_temperature mwbold">CYTR 250000Z AUTO 19005KT 150V230 10SM CLR 21/16 A2976 RMK T02140158 SLP077 DENSITY ALT 1500FT=</p>
+</td></tr>
+<tr align="center" class="noWrap" valign="top"><td class="mwconditions_tdname noWrap"><p class="mwconditions_temperature"><abbr style="text-decoration: none; border-bottom: 0px" class="timepopup" title="" onmouseover="create_time_popup(this)" data-tzoffset="0" data-epochvalue="1756080599">2025-08-25 00:09:59 UTC</abbr></p>
+<p>Server Time</p>
+</td><td class="mwconditions_tdname noWrap"><p class="mwconditions_temperature" style=""><abbr style="text-decoration: none; border-bottom: 0px" class="timepopup" title="" onmouseover="create_time_popup(this)" data-tzoffset="0" data-epochvalue="1756080540">00:09 UTC</abbr></p>
+<div class="center"><a class="menulink" href="?id=CYTR&amp;atime=202508250000" title="Previous Hour"><span aria-hidden="true" class="glyphicon glyphicon-backward"></span></a>&nbsp;&nbsp;&nbsp;<a class="menulink" href="?id=CYTR&amp;atime=202508250000" title="Previous Report"><span aria-hidden="true" class="glyphicon glyphicon-chevron-left"></span></a>&nbsp;&nbsp;&nbsp;<a class="menulink" href="javascript:;" onClick="return false;" title="Next Report"><span aria-hidden="true" class="glyphicon glyphicon-chevron-right" style="color:silver"></span></a>&nbsp;&nbsp;&nbsp;<a class="menulink" href="javascript:;" onClick="return false;" title="Next Hour"><span aria-hidden="true" class="glyphicon glyphicon-forward" style="color:silver"></span></a>&nbsp;&nbsp;&nbsp;<a class="menulink" href="javascript:;" onClick="return false;" title="Latest Report"><span aria-hidden="true" class="glyphicon glyphicon-fast-forward" style="color:silver"></span></a></div>
+<p style="color:red"></p>
+<p>AWOS Report Time</p>
+</td></tr>
+<tr align="center" class="noWrap" valign="top"><td class="mwconditions_tdname noWrap" rowspan="4" valign="top"><table><tr><td class="conditions"><a class="menulink" href="?id=CYTR&amp;detail=CLD" title="Cloud">Cloud</a></td><td class="conditions"><span class=""><b>CLR</b></span></td></tr>
+<tr><td class="conditions"><a class="menulink" href="?id=CYTR&amp;detail=PCP" title="Present Weather">Present Weather</a></td><td class="conditions"><span class=""><b>n/a</b></span></td></tr>
+</table>
+<table><tr><td class="conditions"><a class="menulink" href="?id=CYTR&amp;detail=VIS" title="Visibility">Visibility</a></td><td class="conditions"><span class=""><b>10+ sm<BR>10000 m</b><i> (6.2 sm)</i></span></td></tr>
+<tr><td class="conditions">Visibility Min-Max</td><td class="conditions"><span class=""><b>10+ - 10+ sm<BR>10000 - 10000 m</b></span></td></tr>
+<tr><td class="conditions"><a class="menulink" href="?id=CYTR&amp;detail=RVR" title="RVR">RVR</a></td><td class="conditions"><span class=""><b>RWY24 P6000 FT</b></span></td></tr>
+<tr><td class="conditions"><a class="menulink" href="?id=CYTR&amp;detail=TMP" title="Temperature">Temperature</a></td><td class="conditions"><span class=""><b>21.3 &deg;C</b></span></td></tr>
+<tr><td class="conditions"><span>Dew Point</span></td><td class="conditions"><span class=""><b>15.9 &deg;C</b></span></td></tr>
+<tr><td class="conditions"><span>Spread</span></td><td class="conditions"><span class=""><i>5.4</i></span></td></tr>
+<tr><td class="conditions"><span>T trend 1-hr/3-hr</span></td><td class="conditions"><span class=""><i>-1.4 / -2.5</i></span></td></tr>
+<tr><td class="conditions"><span>T -12 hr</span></td><td class="conditions"><span class=""><i>19.6</i></span></td></tr>
+<tr><td class="conditions"><span>Humidex</span></td><td class="conditions"><span class=""><i>25.7</i></span></td></tr>
+<tr><td class="conditions"><span>Wind Chill</span></td><td class="conditions"><span class=""><i>n/a</i><i></i></span></td></tr>
+<tr><td class="conditions"><a class="menulink" href="?id=CYTR&amp;detail=WND" title="Wind">Wind</a><span> 2-min</span></td><td class="conditions"><span class=""><b>200° 05 G 07 Kts</b></span></td></tr>
+<tr><td class="conditions"><span>Wind 10-min</span></td><td class="conditions"><span class=""><b>200° 04 G 07 Kts</b></span></td></tr>
+<tr><td class="conditions"><span>Wind Dir Var</span></td><td class="conditions"><span class=""><b>160° to 230°</b></span></td></tr>
+<tr><td class="conditions"><span>Wind 60-min</span></td><td class="conditions"><span class=""><b>210° 06 Kts</b></span></td></tr>
+<tr><td class="conditions"><span><a class="menulink" href="?id=CYTR&amp;detail=PSR" title="Altimeter">Altimeter</a></span></td><td class="conditions"><span class=""><b>29.76 inHg</b></span></td></tr>
+<tr><td class="conditions"><span>MSL Pressure</span></td><td class="conditions"><span class=""><i>1007.9 hPa</i></span></td></tr>
+<tr><td class="conditions"><span>Station Pressure</span></td><td class="conditions"><span class=""><b>997.7 hPa</b></span></td></tr>
+<tr><td class="conditions"><span>Tendency 3-hr</span></td><td class="conditions"><span class=""><i>-0.1 hPa</i></span></td></tr>
+<tr><td class="conditions"><span>Tendency 15-min/1-hr</span></td><td class="conditions"><span class=""><i>0.0 / +0.3 hPa</i></span></td></tr>
+<tr><td class="conditions"><span>Pressure Altitude</span></td><td class="conditions"><span class=""><i>433 ft</i></span></td></tr>
+<tr><td class="conditions"><span>Density Altitude</span></td><td class="conditions"><span class=""><i>1507 ft</i></span></td></tr>
+<tr><td class="conditions"><span>Ltg Description</span></td><td class="conditions"><span class=""><b>n/a</b></span></td></tr>
+<tr><td class="conditions"><span><a class="menulink" href="?id=CYTR&amp;detail=Alarms" title="Alarms">Alarms</a></span></td><td class="conditions"><span class=""><b>3</b></span></td></tr>
+<tr><td class="conditions"><a class="menulink" href="/english/airops/Text?mask=XM CYTR 250009&amp;history=1&amp;count=1&amp;latest=1&amp;etime=202508250014" target="_blank" title>Raw Report</a></td><td class="conditions"></td></tr>
+</table>
+</td><td><table><tr><td class="mwconditions_tdname noWrap" valign="middle"><div class="alignCenter"><img alt="Clear" class="mwconditions_icon" height="100px" src="/cgi-bin/wx_icon.cgi?cld=51&amp;day=-1" title="Clear" width="100px"><p class="mw_mobileweather"><i>Clear</i></p>
+</div>
+</td></tr>
+<tr><td class="mwconditions_tdname noWrap" valign="middle"><p class="mwconditions_temperature"><b>21.3 &deg;C</b></p>
+<p>Temperature</p>
+</td></tr>
+<tr><td class="mwconditions_tdname noWrap" valign="middle"><div class="alignCenter"><img src="/cgi-bin/awoswindrose.fcgi?&amp;atime=2025-08-25T00:09:00Z&amp;id=CYTR&amp;mode=0&amp;withgust=0"><p><a class="menulink" href="?id=CYTR&amp;withgust=1" title="Windrose - Speed or Gust">Windrose - Speed or Gust</a></p>
+<p class="mwconditions_temperature"><b>200° 05 G 07</b></p>
+<p>Wind 2-min (Kts)</p>
+</div>
+</td></tr>
+<tr><td class="mwconditions_tdname noWrap" valign="middle"><p class="mwconditions_temperature"><b>71 %</b></p>
+<p>Humidity</p>
+</td></tr>
+</table>
+</td></tr>
+</table>
+<br>
+<br><em>Italics denotes derived data or not directly from the AWOS minutely report.</em><br>
+<em>This page will automatically refresh every minute</em><br>
+
+</div></main></div></div><!-- center -->
+</div><!-- colLayout -->
+<dl id="wb-dtmd">Updated: <abbr style="text-decoration: none; border-bottom: 0px" class="timepopup" title="" onmouseover="create_time_popup(this)" data-tzoffset="0" data-epochvalue="1756080599">2025-08-25 00:09 UTC</abbr></dl></div><!-- page -->
+</div><!-- core -->
+<!--noindex-->
+<script src="/2.20250704.0.38/scripts/wet-boew/jquery.min.js" type="text/javascript"></script>
+<script src="/2.20250704.0.38/scripts/jquery-ui.min.js" type="text/javascript"></script>
+<script src="/2.20250704.0.38/scripts/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
+<script src="/2.20250704.0.38/scripts/jquery-ui-slider-pips.js" type="text/javascript"></script>
+<script src="/2.20250704.0.38/scripts/wet-boew/js/wet-boew.min.js" type="text/javascript"></script>
+<script src="/2.20250704.0.38/scripts/common_jquery.js" type="text/javascript"></script>
+<footer class="visible-md visible-lg wb-navcurr wb-navcurr-inited" id="wb-info" role="contentinfo"><div class="container"><nav role="navigation"><div class="row"><section class="col-sm-3"><h3>Contact us</h3><ul class="list-unstyled"><li><a href="/english/Feedback/?reference=/english/airops/AWOS/?id=CYTR" title="Questions or comments?">Questions or comments?</a></li></ul></section><section class="col-sm-3"><h3>About</h3><ul class="list-unstyled"><li><a href="/english/Help/">About CF Weather Office</a></li></ul></section><section class="col-sm-3"><h3>Notices</h3><ul class="list-unstyled"><li><a href="/english/Notices/">Important notices</a></li></ul></section><section class="col-sm-3"><h3>Canada.gc.ca</h3><ul class="list-unstyled"><li><a href="http://www.canada.gc.ca/">Visit Canada.gc.ca</a></li></ul></section></div>
+</nav></div></footer><!-- Footer -->
+<!--/noindex-->
+<script src="/2.20250704.0.38/scripts/wet-boew/js/i18n/en.min.js" type="text/javascript"></script>
+</body></html>

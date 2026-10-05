@@ -1,0 +1,1258 @@
+if(!dojo._hasResource["metweb.common"]){
+	dojo._hasResource["metweb.common"]=true;
+	dojo.provide("metweb.common");
+	dojo.require("dojo.on");
+
+	metweb.common.eventFire=function(el, etype){
+		if (el.fireEvent) {
+			(el.fireEvent('on' + etype));
+		} else {
+			var evObj = document.createEvent('Events');
+			evObj.initEvent(etype, true, false);
+			el.dispatchEvent(evObj);
+		}
+	};
+
+	/* Grab the current metweb version */
+	metweb.common.version=function(){
+		return $('meta[name=mwversion]')[0].content;
+	};
+
+	metweb.common.max_request_size=function(){
+		var max = $('meta[name=maxrequestsize]')[0];
+		if (max && max.content) {
+			return max.content;
+		}
+		return 1024*100;
+	};
+
+	/* Get the default background color for graphics */
+	metweb.common.bkg = function(){
+		return 'white';
+	};
+
+	/* DATE TIME */
+	/* NOTE: Javascript epoch is in milliseconds, rather than seconds */
+	metweb.common.definedDate=function (date) {
+		var defined = false;
+		if (date.yr && date.mo && date.da && date.hr && date.mi) {
+			defined = true;
+		}
+		return defined;
+	}
+	metweb.common.time=function() {
+		return new Date().getTime();
+	};
+	metweb.common.epoch2Date=function(epoch) {
+		return new Date(epoch);
+	};
+	metweb.common.Date2struct=function(date) {
+	  var yr = date.getUTCFullYear()+'';
+		var mo = (date.getUTCMonth()+1)+'';
+		if (mo.length == 1) {
+			mo = "0"+mo;
+		}
+		var da = date.getUTCDate()+'';
+		if (da.length == 1) {
+			da = "0"+da;
+		}
+		var hr = date.getUTCHours()+'';
+		if (hr.length == 1) {
+			hr = "0"+hr;
+		}
+		var mi = date.getUTCMinutes()+'';
+		if (mi.length == 1) {
+			mi = "0"+mi;
+		}
+		var se = date.getUTCSeconds()+'';
+		if (se.length == 1) {
+			se = "0"+se;
+		}
+		var ms = date.getUTCMilliseconds()+'';
+		if (ms.length == 1) {
+			ms = "00"+ms;
+		} else if (ms.length == 2) {
+			ms = "0"+ms;
+		}
+		
+		return {'yr':yr, 'mo':mo, 'da':da, 'hr':hr, 'mi':mi, 'se':se, 'ms':ms};
+	};
+	metweb.common.struct2epoch=function(struct) {
+		return Date.UTC(parseInt(struct.yr,10),
+			parseInt(struct.mo,10)-1, parseInt(struct.da,10),
+			parseInt(struct.hr,10), parseInt(struct.mi,10),
+			parseInt(struct.se,10));
+	};
+	metweb.common.struct2Date=function(struct) {
+		return new Date(metweb.common.struct2epoch(struct));
+	};
+	metweb.common.Date2epoch=function(date) {
+		var e = parseInt(date.getTime(),10);
+		return e||0;
+	};
+
+	// web form times get/set
+	metweb.common.set_form_datetime_date=function(date) {
+		var date_s = metweb.common.Date2struct(date);
+		dojo.byId("time_year").value = date_s.yr;
+		dojo.byId("time_month").value = date_s.mo;
+		dojo.byId("time_day").value = date_s.da;
+		if( dojo.byId("time_hour") && dojo.byId("time_minute") ) {
+			dojo.byId("time_hour").value = date_s.hr;
+			dojo.byId("time_minute").value = date_s.mi;
+		}
+	};
+	metweb.common.set_form_datetime_epoch=function(epoch) {
+				metweb.common.set_form_datetime_date(metweb.common.epoch2Date(epoch));
+	};
+	metweb.common.clear_form_datetime=function() {
+				dojo.byId("time_year").value = "";
+				dojo.byId("time_month").value = "";
+				dojo.byId("time_day").value = "";
+				if( dojo.byId("time_hour") && dojo.byId("time_minute") ) {
+					dojo.byId("time_hour").value = "";
+					dojo.byId("time_minute").value = "";				
+				}
+	};
+
+	metweb.common.get_form_datetime_as_struct=function() {
+		var now = new Date();
+		var yr = dojo.byId("time_year").value;
+		var th = dojo.byId("time_hour");
+		var tm = dojo.byId("time_minute");
+		return {
+			'yr':yr,
+			'mo':dojo.byId("time_month").value,
+			'da':dojo.byId("time_day").value,
+			'hr':(yr ? (th ? th.value : (now.getUTCHours()+'')) : ''),
+			'mi':(yr ? (tm ? tm.value : (now.getUTCMinutes()+'')) : ''),
+			'se':'00',
+			'ms':'000'
+			};
+
+	};
+
+	// handles various iso8601 combinations and returns an epoch in JS milliseconds
+	metweb.common.iso2epoch=function(iso){
+		if (!iso) { 
+			return 0; 
+		}
+		// first, let the javascript Date library have a crack at it
+		// Known: Date doesn't handle YYYY. 
+		// Otherwise, most requests will fall into here. And Date does a very good consistent job
+		var epoch;
+		if (iso.length > 4) {
+			var date = new Date(iso);
+			if (date) {
+				epoch = date.getTime();
+				if (epoch != undefined) {
+					return epoch;
+				}
+			}
+			metweb.common.dumper("iso2epoch and Date may have had trouble to convert "+iso+" into an epoch");
+		} else if (iso.length == 4) {
+			var s = {
+				'yr':iso,
+				'mo':'01',
+				'da':'01',
+				'hr':'00',
+				'mi':'00',
+				'se':'00',
+				'ms':'000',
+			};
+			epoch = metweb.common.Date2epoch(metweb.common.struct2Date(s));
+			return epoch;
+		} else {
+			metweb.common.dumper("iso2epoch and Date may have had trouble to convert "+iso+" into an epoch");
+		}
+		return 0;
+	}
+	//IMF-fixdate is the http standard
+	//FIXME: seems similar to the above iso2epoch, so we may decide to remove this one and replace calls-to
+	metweb.common.IMF2epoch=function(imf) {
+		var date = new Date(imf);
+		var epoch = metweb.common.Date2epoch(date);
+		return epoch;
+	};
+
+	// figure out the time string format from an iso time string
+	metweb.common.iso2fmt=function(iso){
+		if (!iso) { 
+			return ''; 
+		}
+		var fmt = iso;
+		fmt = fmt.replace(/^\d{4}-\d{2}-\d{2}/,'%F');
+		fmt = fmt.replace(/^\d{4}-\d{2}/,'%Y-%m');
+		fmt = fmt.replace(/^\d{4}/,'%Y');
+		fmt = fmt.replace(/\d{2}:\d{2}:\d{2}/,'%T');
+		fmt = fmt.replace(/\d{2}:\d{2}/,'%H:%M');
+		fmt = fmt.replace(/\.\d{3}/,'.%f');
+		return fmt;
+	}
+
+	// js doesn't have posix strftime. This is an 'our' strftime, but in UTC(Z) only.
+	metweb.common.strftime=function(fmt,e){
+		var s = metweb.common.Date2struct(metweb.common.epoch2Date(e));
+		var tstr = fmt;
+		tstr = tstr.replace('%F',[s.yr,s.mo,s.da].join('-'));
+		tstr = tstr.replace('%Y',s.yr);
+		tstr = tstr.replace('%m',s.mo);
+		tstr = tstr.replace('%d',s.da);
+		tstr = tstr.replace('%T',[s.hr,s.mi,s.se].join(':'));
+		tstr = tstr.replace('%H',s.hr);
+		tstr = tstr.replace('%M',s.mi);
+		tstr = tstr.replace('%S',s.se);
+		tstr = tstr.replace('%f',s.ms);
+		return tstr;
+	}
+	metweb.common.format_iso8601_time=function(epoch){
+		return metweb.common.strftime("%FT%TZ",epoch);
+	};
+
+	// convert epoch time (in seconds) to ISO string
+	// basically, FormatISOTime() with UTC appended (since all metweb datestamps include UTC).
+	// NOTE: This func also expects time in epoch-seconds like we do on server side, not JS milliseconds
+	metweb.common.format_iso_time=function(t) {
+		return metweb.common.strftime("%F %H:%M UTC",t*1000);
+	};
+	// Same function as above minus UTC display, and option to show seconds
+	// NOTE: This func also expects time in epoch-seconds like we do on server side, not JS milliseconds
+	metweb.common.format_iso_time_nolabel=function(t, show_seconds) {
+		var fmt = show_seconds?"%F %T":"%F %H:%M";
+		return metweb.common.strftime(fmt,t*1000);
+	};
+	metweb.common.format_wxdurstr_time=function(epoch){
+		if (!epoch) { return ""; }	
+		if (epoch == -2) { return "INT"; }
+		else if (epoch < 0) { return "M"; }
+		return metweb.common.strftime("%H:%M",epoch);
+	};
+
+	// Get start of climatological month
+	metweb.common.epoch_start_climate_month = function (e) {
+		var s = metweb.common.Date2struct(metweb.common.epoch2Date(e));
+		//if the date is already the first and before 06:01z, set to previous month first
+		if (parseInt(s.da, 10) == 1 && (parseInt(s.hr, 10) == 6 && parseInt(s.mi, 10) < 1)){
+			e -= 24 * 60 * 60 * 1000;
+			s = metweb.common.Date2struct(metweb.common.epoch2Date(e));
+		}
+
+		//set day to 1st of current month
+		while (parseInt(s.da, 10) > 1) {
+			e -= 24 * 60 * 60 * 1000;
+			s = metweb.common.Date2struct(metweb.common.epoch2Date(e));
+		}
+
+		s.hr = "06";
+		s.mi = "01";
+		s.se = "00";
+		s.ms = "000";
+		return metweb.common.struct2epoch(s);
+	}
+
+	// Get end of climatological month
+	metweb.common.epoch_end_climate_month = function (e) {
+		var s = metweb.common.Date2struct(metweb.common.epoch2Date(e));
+		if (parseInt(s.da, 10) > 1 || (parseInt(s.hr, 10) >= 6 && parseInt(s.mi, 10) >= 1)){
+			e = metweb.common.epoch_plus_month(e);
+			s = metweb.common.Date2struct(metweb.common.epoch2Date(e));
+		}
+
+		s.hr = "06";
+		s.mi = "00";
+		s.se = "00";
+		s.ms = "000";
+		return metweb.common.struct2epoch(s);
+	}
+
+	metweb.common.epoch_minus_month = function (e) {
+		var s = metweb.common.Date2struct(metweb.common.epoch2Date(e));
+		var s2 = s;
+		var e2 = e;
+		while (s2.mo == s.mo) {
+			e2 -= 24 * 60 * 60 * 1000;
+			s2 = metweb.common.Date2struct(metweb.common.epoch2Date(e2));
+		}
+		return e2;
+	}
+	metweb.common.epoch_plus_month=function(e) {
+		var s = metweb.common.Date2struct(metweb.common.epoch2Date(e));
+		var s2 = s;
+		var e2 = e;
+		while (s2.mo == s.mo) {
+			e2 += 24*60*60*1000;
+			s2 = metweb.common.Date2struct(metweb.common.epoch2Date(e2));
+		}
+		return e2;
+	}
+	metweb.common.epoch_plus_year=function(e) {
+		var s = metweb.common.Date2struct(metweb.common.epoch2Date(e));
+		var s2 = s;
+		var e2 = e;
+		while (s2.yr == s.yr) {
+			e2 += 24*60*60*1000;
+			s2 = metweb.common.Date2struct(metweb.common.epoch2Date(e2));
+		}
+		return e2;
+	}
+
+	metweb.common.asktime=function(dt){
+		var len = dt.length;
+		var now = metweb.common.time();
+		var ns = metweb.common.Date2struct(metweb.common.epoch2Date(now));
+		switch(len){
+			case 17: //YYYYMMDDHHMMSSsss
+			case 14: //YYYYMMDDHHMMSS 
+			case 12: //YYYYMMDDHHMM
+				var s = {
+						'yr':dt.substring(0,4),
+						'mo':dt.substring(4,6),
+						'da':dt.substring(6,8),
+						'hr':dt.substring(8,10),
+						'mi':dt.substring(10,12),
+						'se':'00',
+						'ms':'000'
+					};
+				return metweb.common.Date2epoch(metweb.common.struct2Date(s));
+
+			case 8:	// YYMMDDHH
+				var s = {
+						'yr':'20'+dt.substring(0,2),
+						'mo':dt.substring(2,4),
+						'da':dt.substring(4,6),
+						'hr':dt.substring(6),
+						'mi':ns.mi,
+						'se':'00',
+						'ms':'000'
+					};
+				return metweb.common.Date2epoch(metweb.common.struct2Date(s));
+
+			case 6:	// YYMMDD
+				var s = {
+						'yr':'20'+dt.substring(0,2),
+						'mo':dt.substring(2,4),
+						'da':dt.substring(4),
+						'hr':ns.hr,
+						'mi':ns.mi,
+						'se':'00',
+						'ms':'000'
+					};
+				return metweb.common.Date2epoch(metweb.common.struct2Date(s));
+
+			case 4: // HHMM
+				var s = {
+						'yr':ns.yr,
+						'mo':ns.mo,
+						'da':ns.da,
+						'hr':dt.substring(0,2),
+						'mi':dt.substring(2),
+						'se':'00',
+						'ms':'000'
+					};
+				return metweb.common.Date2epoch(metweb.common.struct2Date(s));
+
+			case 2:	// HH
+				var s = {
+						'yr':ns.yr,
+						'mo':ns.mo,
+						'da':ns.da,
+						'hr':dt,
+						'mi':'00',
+						'se':'00',
+						'ms':'000'
+					};
+				return metweb.common.Date2epoch(metweb.common.struct2Date(s));
+
+			case 1:	// 0
+				if( dt == "0" ){
+					return now;
+				}
+				break;
+
+			case 0: // empty
+				return now;
+
+			default:
+				break;
+		}
+
+	};
+	// NOTE: this function's timestr is in MM asktime format
+	metweb.common.timestr2iso8601=function(timestr){
+		var epoch = metweb.common.asktime( timestr );
+		return metweb.common.format_iso8601_time(epoch);
+	};
+
+	metweb.common.format_seconds_pretty=function(ep){
+		// note expects epoch in seconds, not milliseconds.
+		// Try to replicate perl's Time::Seconds->new(e)->pretty();
+		var MIN = 60;
+		var HR = 60*MIN;
+		var DAY = 24*HR;
+		//var MO = 30*DAY;
+		var YR = 365*DAY;
+
+		var t = parseInt(ep,10);
+		var days = Math.floor(t/DAY);
+		t -= days*DAY;
+		var hours = Math.floor(t/HR);
+		t -= hours*HR;
+		var minutes = Math.floor(t/MIN);
+		t -= minutes*MIN;
+		var seconds = t;
+
+		var str = '';
+		if (days) {
+			var dstr = (days<2)?"day":"days";
+			str = str.concat(days, " ", dstr);
+		}
+		if (hours) {
+			var hstr = (hours<2)?"hour":"hours";
+			if (str.length) { str = str.concat(", "); }
+			str = str.concat(hours, " ", hstr);
+		}
+		if (minutes) {
+			var mstr = (minutes<2)?"minute":"minutes";
+			if (str.length) { str = str.concat(", "); }
+			str = str.concat(minutes, " ", mstr);
+		}
+		if (seconds) {
+			var sstr = (seconds<2)?"second":"seconds";
+			if (str.length) { str = str.concat(", "); }
+			str = str.concat(seconds, " ", sstr);
+		}
+		return str;
+	};
+
+	/* UTILS */
+	metweb.common.ourEnterKey=function() {
+		dojo.query('input[type="text"]').onkeypress(
+			function(event) {
+				if (event.charOrCode == dojo.keys.ENTER) {
+					event.preventDefault();
+				}
+			}
+		);
+	};
+
+	// var nonzero = grep(in, function(n){return n > 0;});
+	metweb.common.grep=function(items,fn) {
+		// http://gabrieleromanato.name/javascript-implementing-the-grep-function/
+		// dojo._base.array.filter would be better, but...
+		var filtered = [], len = items.length, i = 0;
+		for (i; i < len; i++) {
+			var item = items[i];
+			var cond = fn(item);
+			if (cond) {
+				filtered.push(item);
+			}
+		}
+		return filtered;
+	};
+
+	// javascript has known float bug. accepts string or float
+	metweb.common.float_bug=function(value) {
+		if (value == null) {return NaN;}
+		if (isNaN(value)) {return NaN;}
+		var value_f = (typeof value === "string")?parseFloat(value):value;
+		return parseFloat(value_f.toFixed(13));
+	};
+
+	metweb.common.ourParseInt=function(string) {
+		if (string == null || string === '') {return '';}
+		if (isNaN(string)) {return NaN;}
+		var value_i = (typeof value === "string")?parseInt(string,10):string;
+		return value_i;
+	};
+
+	/* round to nearest. accepts strings or int/float */
+	metweb.common.nearest=function(near, value) {
+		if (value == null || near == null) {return NaN;}
+		//if (typeof value === "object" || typeof near === "object") {return NaN;}
+		if (isNaN(value) || isNaN(near)) {return NaN;}
+		var value_f = (typeof value === "string")?parseFloat(value):value;
+		var near_f = (typeof near === "string")?parseFloat(near):near;
+		var answer = ( near_f * Math.round(value_f / near_f) );
+		// javascript has a known float bug, use toFixed
+		return parseFloat(answer.toFixed(13));
+		//return (0.0000000000001 * Math.round(answer/0.0000000000001));
+	};
+	/* round to lowest multiple. implementation duped from perl Round.pm. accepts strings or int/float */
+	metweb.common.nlowmult=function(near, value) {
+		if (value == null || near == null) {return NaN;}
+		//if (typeof value === "object" || typeof near === "object") {return NaN;}
+		if (isNaN(value) || isNaN(near)) {return NaN;}
+		var value_f = (typeof value === "string")?parseFloat(value):value;
+		var near_f = (typeof near === "string")?parseFloat(near):near;
+		near_f = Math.abs(near_f);
+		var answer = ( near_f * Math.floor(value_f / near_f) );
+		// javascript has a known float bug, use toFixed
+		return parseFloat(answer.toFixed(13));
+		//return (0.0000000000001 * Math.round(answer/0.0000000000001));
+	};
+	/* round to highest multiple. implementation duped from perl Round.pm. accepts strings or int/float */
+	metweb.common.nhimult=function(near, value) {
+		if (value == null || near == null) {return NaN;}
+		//if (typeof value === "object" || typeof near === "object") {return NaN;}
+		if (isNaN(value) || isNaN(near)) {return NaN;}
+		var value_f = (typeof value === "string")?parseFloat(value):value;
+		var near_f = (typeof near === "string")?parseFloat(near):near;
+		near_f = Math.abs(near_f);
+		var answer = ( near_f * Math.ceil(value_f / near_f) );
+		// javascript has a known float bug, use toFixed
+		return parseFloat(answer.toFixed(13));
+		//return (0.0000000000001 * Math.round(answer/0.0000000000001));
+	};
+	metweb.common.error=function(_m1) {
+		alert(_m1);
+		// console.error(_m1);
+	};
+
+	metweb.common.dumper=function(_o) {
+		var txt = "";
+		if (_o === null) {
+			txt = "NULL";
+		} else if (typeof _o === 'undefined') {
+			txt = "UNDEFINED";
+		} else if (typeof _o === 'object') {
+			txt = JSON.stringify(_o);
+		} else {
+			txt = _o;
+		}
+		console.log("metweb.common.dumper: "+txt);
+	};
+
+	metweb.common.ourXhrGet=function(_o1){
+		var path = (_o1.path == null) ? '' : _o1.path;
+		/* according to dojo, xhrGet only accepts parameters in one possible field
+ 			* 'content': k/v hash, but seems to work with array ref if k,v pairs.
+ 			* !never values only!
+ 			* k v pairs converted noto url as &k=v in the request
+ 			*
+ 			* For backwards compabibility if ourXhrGet is passed 'params' it will
+ 			* get passed into 'content', until all code that uses Get gets fixed.
+ 			*
+ 			* Therefore when using Get the JSON handler must always expect a
+ 			* hash in 'params'.
+ 			*/
+
+		var default_headers = { "Content-Type": "application/json"};
+		dojo.xhrGet({
+			url: "/json/" + path + _o1.method,
+			/* 'content' preferred. 'params' for backcompat. MUST be k,v*/
+			content: _o1.content||_o1.params, 
+			headers: default_headers,
+			/* FIXME when this is ready: http://cvs.isb.ec.gc.ca/tktview?tn=2234 
+			*headers: _o1.headers?{...default_headers, ..._o1.headers}:default_headers,
+			*/
+			handleAs: _o1.handleAs||"json",
+			sync: _o1.sync||false,
+			error: function(error){
+				/* alert the error */
+				if (error.name){
+					metweb.common.error(
+						_o1.path+_o1.method+": error\nname="+error.name+
+						"\nparams="+window.JSON.stringify( _o1.content||_o1.params,null," ")+
+						"\nmessage="+error.message+
+						"\nfileName="+(error.fileName||'')+
+						"\nlineNumber="+(error.lineNumber||'')+
+						"\nstack="+(error.stack||'')
+					);
+				}else{
+					metweb.common.error(_o1.method+": error="+error);
+				}
+				/* Give application an opportunity to handle the error or recover */
+				if (_o1.error){
+					_o1.error(error);
+				}
+			},
+			load: function(data, a){
+				if (data.error) {
+					if (data.error.name) {
+						metweb.common.error(_o1.method+": data.error\nname="+data.error.name+
+							"\nmessage="+data.error.message
+						);
+					} else {
+						metweb.common.error(_o1.method+": data.error="+data.error);
+					}
+				} else if (typeof data.result !== 'undefined' || _o1.handleAs == 'text') { // yes the !== is intentional
+					if (_o1.load) {
+						_o1.load(data, a);
+					}
+				} else {
+					metweb.common.error(_o1.method+": unknown data object");
+				}
+			}
+		});
+	};
+
+	metweb.common.ourXhrPost=function(_o1) {
+		var path = (_o1.path == null) ? '' : _o1.path;
+		/* according to dojo, xhrPost will exclusively accept either
+ 			* 'postData.params': (preferred) as array ref of vals but hash is ok
+ 			*      OR
+ 			* 'content': k/v hash, but Post drops the keys and 
+ 			*  converts to array ref of values only
+ 			*
+ 			* ourXhrPost will NOT use xhrPost 'content'. It will assign 'content' hash
+ 			* to 'params' to preserve the hash, and the handler may expect the orig 
+ 			* hash set by the caller.
+ 			*
+ 			* Therefore when using Post the JSON handler must always expect an
+ 			* array values in 'params'. By definition they're values, unless was stuffed k,v.
+ 			*/
+		var postDataHash = {version:"1.1",method:_o1.method,params:_o1.params||_o1.content};
+		dojo.xhrPost(
+			{
+			url: "/json/"+ path +_o1.method,
+			postData: dojo.toJson(postDataHash),
+			headers: { "Content-Type": "application/json"},
+			handleAs: "json",
+			sync:_o1.sync||false,
+			error: function(error){
+				/* alert the error */
+				if (error.name) {
+					metweb.common.error(
+						_o1.path+_o1.method+": error\nname="+error.name+
+						"\nparams="+window.JSON.stringify(_o1.params,null," ")+
+						"\nmessage="+error.message+
+						"\nfileName="+(error.fileName||'')+
+						"\nlineNumber="+(error.lineNumber||'')+
+						"\nstack="+(error.stack||'')
+					);
+				} else {
+					metweb.common.error(_o1.method+": error="+error);
+				}
+				/* give application an opportunity to handle the error or recover */
+				if (_o1.error) {
+					_o1.error(error);
+				} 
+			},
+			load: function(data,a){
+				if (data.error) {
+					if (data.error.name) {
+						metweb.common.error(_o1.method+": data.error\nname="+data.error.name+
+							"\nmessage="+data.error.message
+						);
+					} else {
+						metweb.common.error(_o1.method+": data.error="+data.error);
+					}
+				} else if (typeof data.result !== 'undefined') { // yes the !== is intentional
+					if (_o1.load) {
+						_o1.load(data, a);
+					}
+				} else {
+					metweb.common.error(_o1.method+": unknown data object");
+				}
+			}
+			} /* xhrPost parameters */
+		); /* xhrPost */
+	};
+
+	metweb.common.xhr=function(_o1) {
+		var p = (_o1.path === undefined) ? '' : _o1.path;
+
+		var data;
+		var url = "/json/"+p+_o1.method;
+		if (_o1.type === 'GET') {
+			var s = [];
+			for (const key of Object.keys(_o1.params)) {
+				s[s.length] = encodeURIComponent(key)+"="+encodeURIComponent(_o1.params[key]);
+			}
+			data = s.join("&");
+		} else if (_o1.type === 'POST') {
+			var body = {
+				version:"1.1",
+				method:_o1.method,
+				params:_o1.params
+			};
+			data = JSON.stringify(body);
+			var msize = metweb.common.max_request_size();
+			if (data.length >= msize) {
+				metweb.common.error(
+					"Problem with request\n"+
+					"url: "+p+_o1.method+"\n"+
+					"Request size of "+data.length+
+					" exceeds maximum of "+ msize
+				);
+				return;
+			}
+			if (_o1.urlextra) {
+				url += "?"+_o1.urlextra;
+			}
+		}
+
+		$.ajax({
+			type:_o1.type,
+			url:url,
+			data: data,
+			success:function (data, status) {
+				if (status === 'success') {
+					if (data.error) {
+						metweb.common.error(
+							"url: "+p+_o1.method+"\n"+
+							"message: "+data.error.message
+						);
+						if (_o1.error) {
+							_o1.error(data, status);
+						}
+					} else {
+						_o1.load(data);
+					}
+				} else {
+					metweb.common.error(
+						"url: "+p+_o1.method+"\n"+
+						"status: "+status
+					);
+					if (_o1.error) {
+						_o1.error(data, status);
+					}
+				}
+			},
+			error:function (data, status) {
+				metweb.common.error(
+					"url: "+p+_o1.method+"\n"+
+					"status: "+data.statusText
+				);
+				if (_o1.error) {
+					_o1.error(data, status);
+				}
+			},
+			contentType: "application/json",
+			dataType: "json"
+		});
+	};
+
+	/* SYNTAX CHECKING, VALUE & STYLE (bgcolr) PROPAGATE on TEXT FIELDS */
+	metweb.common.propagateStyle=function(srcObj, s) {
+		var postfixes = ["drybulb", "gpm", "dewpoint", "stationpressure", "latitude", "min2_speed"];
+		if (srcObj.id.match(/_dewpoint$/)) { 
+			dojo.style("temperature_moisture_value",s);
+		}
+		for (var i=0; i<postfixes.length; i++) {
+			if (srcObj.id.match(postfixes[i]+"(_calculated)?\$")) {
+				dojo.query('input[type=text][id$="'+postfixes[i]+'"]').filter(function(item){
+					return (item.id.length > postfixes[i].length);
+				}).forEach(function(node, index, arr) {
+						dojo.style(node,s);
+				});
+			}
+		}
+	};
+	metweb.common.badBackground=function(_1, p) {
+		var c = "has-error form-group";
+		var s = { "backgroundColor":"#f5efef"};
+		if (_1) {dojo.addClass(_1.parentNode, c); dojo.removeClass(_1.parentNode, "has-success has-warning");
+		if (p) {metweb.common.propagateStyle(_1, c);}}
+		if (_1) {dojo.style(_1, s); if (p) {metweb.common.propagateStyle(_1, c);}}
+	};
+	metweb.common.warnBackground=function(_1, p) {
+		var c = "has-warning form-group";
+		var s = { "backgroundColor":"#f7f2ea"};
+		if (_1) {dojo.addClass(_1.parentNode, c); dojo.removeClass(_1.parentNode, "has-success has-error");
+		if (p) {metweb.common.propagateStyle(_1, c);}}
+		if (_1) {dojo.style(_1, s); if (p) {metweb.common.propagateStyle(_1, c);}}
+	};
+	metweb.common.goodBackground=function(_1, p) {
+		var c = "has-success form-group";
+		var s = { "backgroundColor":""};
+		if (_1) {dojo.addClass(_1.parentNode, c); dojo.removeClass(_1.parentNode, "has-error has-warning");
+		if (p) {metweb.common.propagateStyle(_1, c);}}
+		if (_1) {dojo.style(_1, s); if (p) {metweb.common.propagateStyle(_1, c);}}
+	};
+	metweb.common.emptyBackground=function(_1, p) {
+		var s = { "backgroundColor":"" };
+		if (_1) {dojo.style(_1, s); if (p) {metweb.common.propagateStyle(_1,s);}}
+		if (_1) {dojo.removeClass(_1.parentNode, "has-error has-warning has-success");}
+	};
+	metweb.common.readonlyBackground=function(_1, p) {
+		var s = { "backgroundColor":"#EFEFEF" };
+		if (_1) {dojo.style(_1, s); if (p) {metweb.common.propagateStyle(_1,s);}}
+		if (_1) {dojo.removeClass(_1.parentNode, "has-error has-warning has-success");}
+	};
+	metweb.common.propagate=function(srcObj) {
+		var postfixes = ["drybulb", "gpm", "dewpoint", "stationpressure", "latitude", "min2_speed"];
+		if (srcObj.id.match("wind_true_speed")) {
+			dojo.query('#wind_min10_speed').attr('value', srcObj.value);
+		}
+		if (srcObj.id.match("wind_true_dir")) {
+			dojo.query('#wind_min10_dir').attr('value', srcObj.value);
+		}
+		for (var i=0; i<postfixes.length; i++) {
+			if (srcObj.id.match(postfixes[i]+"(_calculated)?\$")) {
+				var textlist = dojo.query('input[type=text][id$='+postfixes[i]+']');
+				var hiddenlist = dojo.query('input[type=hidden][id$='+postfixes[i]+']');
+				textlist.concat(hiddenlist).filter(function(item){
+					return (!dojo.attr(item, 'readonly') && item.id.length > postfixes[i].length);
+				}).attr('value', srcObj.value);
+			}
+		}
+	};
+	metweb.common.set_and_propagate=function(srcObj,value) {
+		if (!srcObj) {return;}
+		if (srcObj.id.match("type_version")) { 
+			// we should not copy/overwrite version information from an ob retrieve
+			// the form version is immutable
+			return; 
+		}
+		if (srcObj.type == 'checkbox') {
+			if (value == 'on' || value == 'true' || value == true) {
+			  srcObj.checked = true;
+			} else {
+			  srcObj.checked = false;
+			}
+		} else if (srcObj.value != value) {
+			srcObj.value = value;
+			if (srcObj.dispatchEvent) {
+				var event = document.createEvent("HTMLEvents");
+				event.initEvent("change", false, true);
+				srcObj.dispatchEvent(event);
+			} else if (srcObj.fireEvent) {
+				srcObj.fireEvent("onchange");
+			}
+		}
+		metweb.common.propagate(srcObj);
+	};
+	metweb.common.evalAllSyntax=function(_1) {
+		if (!_1) {return;}
+		dojo.query('input[type=text]').forEach(function(node, index, arr) { 
+				var obtype = dojo.byId("ob_obtype");		
+				var rc = 0;
+				if (node.id == "ident_station_id") {
+					if (obtype) {
+						rc = _1.testSyntax(node);
+					} else {
+						node.id = "ident_station_id_generic";
+						rc = _1.testSyntax(node);
+						node.id = "ident_station_id";
+					}
+				} else {
+					rc = _1.testSyntax(node);
+				}
+				if (!dojo.attr(node, 'readonly')) {
+					if (rc<0) {
+						metweb.common.emptyBackground(node, true);
+					} else if (rc==0) {
+						metweb.common.badBackground(node, true);
+					} else if (rc>0) {
+						metweb.common.emptyBackground(node, true);
+					}
+				} else {
+					metweb.common.readonlyBackground(node, true);
+				}
+			} );
+	};
+	metweb.common.addSyntaxCB=function(_1) {
+		if (!_1) {return;}
+		dojo.query('input[type=text]').forEach(function(n, i, a) {
+			dojo.connect(n, "onkeyup", function() {
+				var rc = 0;
+				var obtype = dojo.byId("ob_obtype");		
+				if (this.id == "ident_station_id") {
+					if (obtype) {
+						rc = _1.testSyntax(this);
+					} else {
+						this.id = "ident_station_id_generic";
+						rc = _1.testSyntax(this);
+						this.id = "ident_station_id";
+					}
+				} else {
+					rc = _1.testSyntax(this);
+				}
+				if (!dojo.attr(this, 'readonly')) {
+					if (rc<0) {
+						metweb.common.emptyBackground(this, false);
+					} else if (rc==0) {
+						metweb.common.warnBackground(this, false);
+					} else if (rc>0) {
+						metweb.common.goodBackground(this, false);
+					}
+				} else {
+					metweb.common.readonlyBackground(this, false);
+				}
+			});
+			dojo.on(n, "focusout", function() {
+				var rc = 0;
+				var obtype = dojo.byId("ob_obtype");		
+				if (this.id == "ident_station_id") {
+					if (obtype) {
+						rc = _1.testSyntax(this);
+					} else {
+						this.id = "ident_station_id_generic";
+						rc = _1.testSyntax(this);
+						this.id = "ident_station_id";
+					}
+				} else {
+					rc = _1.testSyntax(this);
+				}
+				if (!dojo.attr(this, 'readonly')) {
+					if(rc<0) {
+						metweb.common.emptyBackground(this, false);
+					} else if (rc==0) {
+						metweb.common.badBackground(this, false);
+					} else if (rc>0){
+						metweb.common.propagate(this);
+						metweb.common.emptyBackground(this, false);
+					}
+				} else {
+					metweb.common.readonlyBackground(this, false);
+				}
+			});
+		});
+	};
+	metweb.common.addClearCB=function(theRules, theDefaults) {
+		var _1 = dojo.query('input[id^="clear_"]');
+		_1.forEach(function(node, index, arr){
+			dojo.style(node.parentNode, { display:"block" });
+		});
+		_1.onclick(
+			function(event) {
+				event.preventDefault();
+				var limit = dojo.byId(this.id.substring(6));
+				if (!limit) {return;}
+				var clearlist = dojo.query('input[type=text]', limit);
+				if (this.id.match(/wxduration/)) {
+					clearlist = clearlist.concat(dojo.query('input[type=hidden]', limit));
+				}
+				clearlist = clearlist.concat(dojo.query('select', limit));
+				clearlist = clearlist.concat(dojo.query('textarea', limit));
+				clearlist.forEach(function(node, index, arr) {
+					if (_1) {
+						metweb.common.set_and_propagate(node, '');
+					} else {
+						node.value = '';
+					}
+				});
+				dojo.query('input[type="checkbox"]', limit).forEach(function(node, index, arr) {
+					node.checked = false;
+				});
+				if (theDefaults) {
+					clearlist.forEach(function(node, index, arr) {
+						var defaultvalue = theDefaults[node.id];
+						if (defaultvalue) {
+							if (_1) {
+								metweb.common.set_and_propagate(node, defaultvalue);
+							} else {
+								node.value = defaultvalue;
+							}
+						}
+					});
+				}
+				if (theRules) {
+					metweb.common.evalAllSyntax(theRules);
+				}
+			}
+		);
+	};
+
+	function reset_resettable_fieldsets() {
+		console.log("reset_resettable_fieldsets()");
+
+		// we basically need to find the reset buttons (which
+		// attach to the metweb.common.addClearCB() onclick), and 
+		// trip them. Note that the ident and time
+		// fieldsets don't have reset buttons.
+		dojo.query('input[id^="clear_"]').forEach(
+			function(node,index,arr){
+				// we disable entire fieldsets, so grab that node
+				var fs = dojo.byId(node.id.substring(6));
+				if( fs && fs.disabled ) {
+					metweb.common.eventFire(node,"click");
+				}
+			}
+		);
+	}
+
+	/* IDENT RTRV RELATED */
+	metweb.common.handle_retrieve_ident_cfobs=function(theRules){	
+		if( !theRules.testRequired('ident_button_retrieve_cfobs') ) { return 0; }
+
+		// FIXME: this function shouldn't need to know the element ids of the input
+		var identifier = dojo.byId("ident_station_id").value;
+
+		metweb.common.ourXhrGet({
+				method: "ident_retrieve_cfobs",
+				content: {
+					'id': identifier
+				},
+				load: function(data,args){
+					if (null == data.result) {
+						//no op
+					} else {
+
+						// when we change an ident, we need to wipe any data fields,
+						// because otherwise someone can do last obs and resend as
+						// a different ident
+						reset_resettable_fieldsets();
+
+						for (var key in data.result) {
+							metweb.common.set_and_propagate(dojo.byId(key),
+								data.result[key]);
+						}
+						if (dojo.byId('ob_obtype') && dojo.byId('ob_obtype').value == 'metar_ship' &&
+							dojo.byId('ident_ship_callsign') && dojo.byId('ident_ship_callsign').value == '') {
+							dojo.byId('ident_ship_callsign').value = dojo.byId('ident_station_id').value;
+						}
+						metweb.science.calculateGpm('position_gpm');
+						metweb.common.evalAllSyntax(theRules);
+						var state = dojo.byId('awos_retrievestate');
+						var fs = dojo.byId('awos_retrieve');
+						if (!state || !fs) {return;}
+						if (data.result.position_autostation) {
+							state.value = 'visible';
+							dojo.style(fs, { display:"block" });
+						} else {
+							state.value = 'invisible';
+							dojo.style(fs, { display:"none" });
+						}
+						metweb.science.fill_barometer_list(data.result.position_baro_list);
+					}
+				}
+		});
+		return 1;
+	};
+	metweb.common.handle_retrieve_ident_filtered=function(theRules){	
+		if( !theRules.testRequired('ident_button_retrieve_filtered') ) { return 0; }
+
+		// FIXME: this function shouldn't need to know the element ids of the input
+		var identifier = dojo.byId("ident_id").value;
+		var filter = dojo.byId("ident_filter");
+		if (filter) { filter = filter.value; }
+
+		metweb.common.ourXhrGet({
+				method: "ident_retrieve_filtered",
+				content: {
+					'id': identifier,
+					'filter': filter
+				},
+				load: function(data,args){
+					if (null == data.result) {
+						//no op
+					} else {
+						for (var key in data.result) {
+							metweb.common.set_and_propagate(dojo.byId(key),
+								data.result[key]);
+						}
+						var autogen = dojo.byId("autogen");
+						if (autogen) { // exists
+							var autogenval = parseInt(autogen.value,10);
+							if (autogenval) { // enabled
+								var autogenstate = parseInt(dojo.byId("autogenstate").value,10);
+								if (dojo.byId('position_elevation').value == null || dojo.byId('position_elevation').value.length == 0) {	
+									metweb.common.handle_retrieve_elevation(theRules); // trigger the elev search
+								} else {
+									autogenstate |= 4; // bitwise 100
+								}
+								autogenstate |= 1; // bitwise 001
+								dojo.byId("autogenstate").value = autogenstate;
+								// hidden fields don't automatically trigger on change
+								metweb.common.eventFire(dojo.byId("autogenstate"), "change");
+							}
+						}
+					}
+					metweb.common.evalAllSyntax(theRules);
+				}
+		});
+		return 1;
+	};
+	metweb.common.handle_retrieve_elevation=function(theRules){	
+		if( !theRules.testRequired('retrieve_elevation') ) { return 0; }
+		metweb.common.ourXhrGet({
+				method: "retrieve_elevation",
+				content: {
+					'latitude': dojo.byId("position_latitude").value,
+					'longitude': dojo.byId("position_longitude").value
+				},
+				load: function(data,args){
+					if (null == data.result) {
+						//no op
+					} else {
+						for (var key in data.result) {
+							metweb.common.set_and_propagate(dojo.byId(key),
+								data.result[key]);
+						}
+						var autogen = dojo.byId("autogen");
+						if (autogen) { // exists
+							var autogenval = parseInt(autogen.value,10);
+							if (autogenval) { // enabled
+								var autogenstate = parseInt(dojo.byId("autogenstate").value,10);
+								autogenstate |= 4; // bitwise 100
+								dojo.byId("autogenstate").value = autogenstate;
+								// hidden fields don't automatically trigger on change
+								metweb.common.eventFire(dojo.byId("autogenstate"), "change");
+							}
+						}
+					}
+					metweb.common.evalAllSyntax(theRules);
+				}
+		});
+		return 1;
+	};
+	metweb.common.addIdentCB=function(theRules) {
+      dojo.query("#retrieve_elevation").onclick(
+         function(e) {
+				// prevent the form from actually submitting
+				e.preventDefault();
+				metweb.common.handle_retrieve_elevation(theRules);
+			}
+      );
+      dojo.query("#ident_button_retrieve_filtered").onclick(
+         function(e) {
+				// prevent the form from actually submitting
+				e.preventDefault();
+				metweb.common.handle_retrieve_ident_filtered(theRules);
+			}
+      );
+      dojo.query("#ident_id").onkeypress(
+         function(e) {
+				switch(e.keyCode) {
+					case dojo.keys.ENTER:
+						e.preventDefault();
+						metweb.common.handle_retrieve_ident_filtered(theRules);
+						break;
+					default: 
+						break;
+				}
+			}
+      );
+      dojo.query("#ident_button_retrieve_cfobs").onclick(
+         function(e) {
+				// prevent the form from actually submitting
+				e.preventDefault();
+				metweb.common.handle_retrieve_ident_cfobs(theRules);
+			}
+      );
+      dojo.query("#ident_station_id").onkeypress(
+         function(e) {
+				switch(e.keyCode) {
+					case dojo.keys.ENTER:
+						e.preventDefault();
+						metweb.common.handle_retrieve_ident_cfobs(theRules);
+						break;
+					default: 
+						break;
+				}
+			}
+      );
+	};
+
+	metweb.common.activate_mwtextpopup=function() {
+		if(!dojo._hasResource["metweb.common.mwtextpopup_active"]){
+			dojo._hasResource["metweb.common.mwtextpopup_active"]=true;
+			dojo.query('.mwtextpopup').forEach(function(node, index, arr) {
+				var tf = dojo.byId(node.id+'_value');
+				var pp = dojo.byId(node.id+'_popup');
+				if (!tf || !pp) {
+					return;
+				}
+				// FIXME: obstimeline has this commented out for some reason?
+				dojo.style(pp, {width:"20px", border:"none", padding:0});
+				dojo.style(pp, {"box-shadow":"none"});
+				dojo.style(pp, {"background-color":"#fbfaf4"});
+				dojo.connect(pp, "onchange", function() {
+					tf.value = this.value;
+				});
+				dojo.connect(tf, "onchange", function() {
+					if (this.value == '') {
+						pp.value = this.value;
+					}
+				});
+			});
+		}
+
+	}
+
+
+	/* FIELDSET */
+	metweb.common.activate_collapsefs=function(postcall) {
+		if(!dojo._hasResource["metweb.common.fieldset"]){
+			dojo._hasResource["metweb.common.fieldset"]=true;
+
+			function collapse_fs(fs, dv, str, st) {
+				if( fs ) {
+					dojo.attr(fs, 'innerHTML',
+						"<img src=\"/meticons/right.gif\">"+str);
+				}
+				if( dv ) { dojo.style(dv, { display:"none" }); }
+				if( st ) { st.value = 'closed'; }
+				var fieldsets = fs.parentElement.querySelectorAll('fieldset');
+				fieldsets.forEach(function (element) {
+					element.style.display = 'none';
+				});
+				if( postcall != null ) {
+					postcall(fs);
+				}
+			}
+
+			function expand_fs(fs, dv, str, st) {
+				if( fs ) {
+					dojo.attr(fs, 'innerHTML',
+						"<img src=\"/meticons/down.gif\">"+str);
+				}
+				if( dv ) { dojo.style(dv, { display:"block" }); }
+				if( st ) { st.value = 'open'; }
+				var fieldsets = fs.parentElement.querySelectorAll('fieldset');
+				fieldsets.forEach(function (element) {
+					element.style.display = 'block';
+				});
+				if( postcall != null ) {
+					postcall(fs);
+				}
+			}
+
+			var fs_list = dojo.query('.mwcollapsefs');
+			var legends = [];
+
+			fs_list.forEach(function(node, index, arr) {
+				var nl = dojo.query('legend:first-child', node);
+				var legend_str = dojo.attr(nl[0], 'innerHTML');
+				legends[index] = legend_str;
+				var divl = dojo.query('legend + div', node);
+				var state = dojo.byId(node.id+'state');
+
+				if( state ){
+					if (state.value == 'open' && !node.classList.contains('alwaysclosed')) {
+						expand_fs(nl[0], divl[0], legend_str, state);
+					} else {
+						collapse_fs(nl[0], divl[0], legend_str, state);
+					}
+					dojo.connect(nl[0], "onclick", function() {
+						var dspy = dojo.style(divl[0], 'display');
+						if (dspy == 'none') {
+							expand_fs(nl[0], divl[0], legend_str, state);
+						} else {
+							collapse_fs(nl[0], divl[0], legend_str, state);
+						}
+					});
+				}
+			});
+
+			dojo.query('.mwexpandallfs').onclick( function(event) {
+				// prevent the form from actually submitting
+				event.preventDefault();
+				fs_list.forEach(function(node, index, arr) {
+					var nl = dojo.query('legend:first-child', node);
+					var divl = dojo.query('legend + div', node);
+					var state = dojo.byId(node.id+'state');
+					expand_fs(nl[0], divl[0], legends[index], state);
+				});
+			});
+
+			dojo.query('.mwcollapseallfs').onclick( function(event) {
+				// prevent the form from actually submitting
+				event.preventDefault();
+				fs_list.forEach(function(node, index, arr) {
+					var nl = dojo.query('legend:first-child', node);
+					var divl = dojo.query('legend + div', node);
+					var state = dojo.byId(node.id+'state');
+					collapse_fs(nl[0], divl[0], legends[index], state);
+				});
+			});
+
+
+		}
+	};
+
+}
+
+//# sourceURL=/2.20250704.0.38/scripts/common.js

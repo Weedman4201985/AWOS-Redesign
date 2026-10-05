@@ -1,0 +1,26 @@
+CFWOS AWOS Core 5.0(Dev copy).user.js:73 Logger script loaded at 900.3999999761581
+CFWOS AWOS Core 5.0(Dev copy).user.js:20 🟢 [AWOS] 🚀 AWOS Logger Utility v1.0 initialized
+CFWOS AWOS Core 5.0(Dev copy).user.js:79 Core script loaded at 900.5
+CFWOS AWOS Core 5.0(Dev copy).user.js:20 🟢 [AWOS] ✅ Starting AWOS cleanup...
+CFWOS AWOS Core 5.0(Dev copy).user.js:20 🟢 [AWOS] Waiting for jQuery...
+CFWOS AWOS Core 5.0(Dev copy).user.js:20 🟢 [AWOS] [AWOS Core] Auto-refresh module initialized. Current state: OFF
+CFWOS AWOS Core 5.0(Dev copy).user.js:20 🟢 [AWOS] [AWOS Core] Dummy favicon injected safely
+CFWOS AWOS Core 5.0(Dev copy).user.js:20 🟢 [AWOS] [findAllMouseoverElements] Found 3 elements with onmouseover
+CFWOS AWOS Core 5.0(Dev copy).user.js:20 🟢 [AWOS] [patchLegacyMouseoverHandlers] Rewiring popup for element: <abbr style=​"text-decoration:​ none;​ border-bottom:​ 0px" class=​"timepopup" title data-tzoffset=​"0" data-epochvalue=​"1756216076">​2025-08-26 13:47:56 UTC​</abbr>​
+CFWOS AWOS Core 5.0(Dev copy).user.js:20 🟢 [AWOS] [patchLegacyMouseoverHandlers] Rewiring popup for element: <abbr style=​"text-decoration:​ none;​ border-bottom:​ 0px" class=​"timepopup" title data-tzoffset=​"0" data-epochvalue=​"1756216020">​13:47 UTC​</abbr>​
+CFWOS AWOS Core 5.0(Dev copy).user.js:20 🟢 [AWOS] [patchLegacyMouseoverHandlers] Rewiring popup for element: <abbr style=​"text-decoration:​ none;​ border-bottom:​ 0px" class=​"timepopup" title data-tzoffset=​"0" data-epochvalue=​"1756216077">​2025-08-26 13:47 UTC​</abbr>​
+CFWOS AWOS Core 5.0(Dev copy).user.js:20 🟢 [AWOS] [patchLegacyMouseoverHandlers] Patched 3 mouseover elements
+CFWOS AWOS Core 5.0(Dev copy).user.js:20 🟢 [AWOS] 🧭 DOM fully loaded
+CFWOS AWOS Core 5.0(Dev copy).user.js:20 🟢 [AWOS] ✅ Body detected — starting CleanupSuite
+CFWOS AWOS Core 5.0(Dev copy).user.js:20 🟢 [AWOS] [AWOSRestorer] AWOS fixes applied.
+CFWOS AWOS Core 5.0(Dev copy).user.js:36 ℹ️ [AWOS INFO] 🟢 [Cleanup Suite] Legacy script observer started
+CFWOS AWOS Core 5.0(Dev copy).user.js:23 📂 [AWOS] Legacy plugin and bloat cleanup
+CFWOS AWOS Core 5.0(Dev copy).user.js:20 🟢 [AWOS] ✅ AWOS Cleanup Suite complete
+CFWOS Cleanup Suite 1.1(Dev copy).user.js:383 (index)Value(index)Value0'🔕 Font Patch: No legacy fonts found'1"🔕 Zoom Patch: No elements found using 'zoom'"2'✅ Cookie Patch: Getter/setter overridden'3'✅ XHR Patch: Logging enabled for all requests'Array(4)
+CFWOS AWOS Core 5.0(Dev copy).user.js:36 ℹ️ [AWOS INFO] [CleanupSuite] CFWOS Cleanup Suite complete.
+CFWOS AWOS Core 5.0(Dev copy).user.js:23 📂 [AWOS] 1 mutation(s) detected
+CFWOS AWOS Core 5.0(Dev copy).user.js:23 📂 [AWOS] Removing header and footer elements
+CFWOS AWOS Layout Enhancer(Dev copy).user.js:26 🎯 Layout Enhancer running after Core cleanup
+CFWOS AWOS Core 5.0(Dev copy).user.js:20 🟢 [AWOS] 📢 Layout Enhancer dispatched successfully
+CFWOS AWOS Core 5.0(Dev copy).user.js:20 🟢 [AWOS] observeAWOS Observer disconnected after delay
+CFWOS AWOS Core 5.0(Dev copy).user.js:36 ℹ️ [AWOS INFO] 🛑 Legacy script observer disconnected

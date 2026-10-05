@@ -1,0 +1,1686 @@
+Index: Working copies/CFWOS AWOS Layout Enhancer 2.0.user.js
+===================================================================
+diff --git a/Working copies/CFWOS AWOS Layout Enhancer 2.0.user.js b/Working copies/CFWOS AWOS Layout Enhancer 2.0.user.js
+deleted file mode 100644
+--- a/Working copies/CFWOS AWOS Layout Enhancer 2.0.user.js	(revision 0ee9162728e0a21ab7249de2b0588d2a64935a27)
++++ /dev/null	(revision 0ee9162728e0a21ab7249de2b0588d2a64935a27)
+@@ -1,90 +0,0 @@
+-// ==UserScript==
+-// @name         CFWOS AWOS Layout Enhancer 2.0
+-// @namespace    http://tampermonkey.net/
+-// @version      2.0
+-// @description  Restore and enhance AWOS report layout with full styling
+-// @author       Chris
+-// @match        https://met.forces.gc.ca/english/airops/*
+-// @grant        none
+-// ==/UserScript==
+-
+-(function() {
+-    'use strict';
+-
+-    const applyEnhancements = (awosPanel) => {
+-        if (!awosPanel) {
+-            console.warn("⚠️ AWOS panel not found");
+-            return;
+-        }
+-
+-        console.log("🎯 Layout Enhancer running after Core cleanup");
+-
+-        Object.assign(awosPanel.style, {
+-            backgroundColor: '#f5f5dc',
+-            color: '#222',
+-            padding: '24px',
+-            borderRadius: '10px',
+-            boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
+-            fontFamily: '"Segoe UI", sans-serif',
+-            lineHeight: '1.6',
+-        });
+-
+-        const headers = awosPanel.querySelectorAll('h1, h2, h3');
+-        headers.forEach(header => {
+-            header.style.color = '#333';
+-            header.style.borderBottom = '1px solid #ccc';
+-            header.style.paddingBottom = '6px';
+-            header.style.marginTop = '20px';
+-        });
+-
+-        const tables = awosPanel.querySelectorAll('table');
+-        tables.forEach(table => {
+-            Object.assign(table.style, {
+-                backgroundColor: '#fff',
+-                color: '#000',
+-                borderCollapse: 'collapse',
+-                width: '100%',
+-                marginTop: '20px',
+-                border: '1px solid #ccc',
+-            });
+-
+-            const cells = table.querySelectorAll('th, td');
+-            cells.forEach(cell => {
+-                Object.assign(cell.style, {
+-                    backgroundColor: '#fdf6e3',
+-                    color: '#333',
+-                    border: '1px solid #ccc',
+-                    padding: '8px',
+-                    textAlign: 'center',
+-                });
+-            });
+-        });
+-
+-        const styleTag = document.createElement('style');
+-        styleTag.textContent = `
+-            @media (max-width: 768px) {
+-                #awos, .awos-report, .report-panel, main {
+-                    padding: 12px !important;
+-                }
+-
+-                table {
+-                    font-size: 14px !important;
+-                }
+-
+-                h1, h2, h3 {
+-                    font-size: 1.2em !important;
+-                }
+-            }
+-        `;
+-        document.head.appendChild(styleTag);
+-    };
+-
+-    // 🕵️ Listen for Core script's cleanup completion
+-    window.addEventListener('AWOSCoreCleanupComplete', () => {
+-        const awosPanel = document.querySelector('#awos, .awos-report, .report-panel, main');
+-        applyEnhancements(awosPanel);
+-    });
+-})();
+-
+-
+-
+Index: Working copies/CFWOS AWOS Core 4.1.user.js
+===================================================================
+diff --git a/Working copies/CFWOS AWOS Core 4.1.user.js b/Working copies/CFWOS AWOS Core 4.1.user.js
+deleted file mode 100644
+--- a/Working copies/CFWOS AWOS Core 4.1.user.js	(revision 0ee9162728e0a21ab7249de2b0588d2a64935a27)
++++ /dev/null	(revision 0ee9162728e0a21ab7249de2b0588d2a64935a27)
+@@ -1,389 +0,0 @@
+-// ==UserScript==
+-// @name         CFWOS AWOS Core 4.1
+-// @namespace    chris.awos
+-// @version      4.1
+-// @description  Stripped ALL cleanup logic
+-// @match        https://met.forces.gc.ca/english/airops/AWOS/*
+-// @grant        none
+-// @run-at       document-start
+-// @inject-into  content
+-// ==/UserScript==
+-
+-(function () {
+-    'use strict';
+-
+-    if (!window.create_time_popup) {
+-        window.create_time_popup = function () {
+-            // Silent fallback or log
+-            Logger.log('[AWOS] Stub: create_time_popup called before real definition');
+-        };
+-    }
+-
+-    let layoutApplied = false;
+-    const mutationLog = [];
+-    const Logger = window.Logger || {
+-        log: (...args) => console.log('🟢', ...args),
+-        group: (label, fn) => {
+-            console.groupCollapsed(`📂 ${label}`);
+-            try { fn(); } catch (e) { Logger.error('Logger group error:', e); }
+-            console.groupEnd();
+-        },
+-        warn: (...args) => console.warn('⚠️', ...args),
+-        error: (...args) => console.error('❌', ...args),
+-        info: (...args) => console.info('ℹ️', ...args)
+-    };
+-
+-    (function setupAutoRefreshToggle() {
+-        const STORAGE_KEY = 'awosAutoRefreshEnabled';
+-        const REFRESH_INTERVAL = 60; // seconds
+-        let refreshEnabled = localStorage.getItem(STORAGE_KEY) !== 'false'; // default to true
+-        let secondsLeft = REFRESH_INTERVAL;
+-
+-        const waitForBody = setInterval(() => {
+-            if (document.body) {
+-                clearInterval(waitForBody);
+-
+-                Logger.log(`[AWOS Core] Auto-refresh module initialized. Current state: ${refreshEnabled ? 'ON' : 'OFF'}`);
+-
+-                // Create top bar container if it doesn't exist
+-                let topBar = document.querySelector('#awos-top-bar');
+-                if (!topBar) {
+-                    topBar = document.createElement('div');
+-                    topBar.id = 'awos-top-bar';
+-                    topBar.style.cssText = `
+-                        position: sticky;
+-                        top: 0;
+-                        z-index: 1000;
+-                        display: flex;
+-                        justify-content: flex-end;
+-                        align-items: center;
+-                        padding: 10px;
+-                        background: #f8f8f8;
+-                        border-bottom: 1px solid #ccc;
+-                    `;
+-                    document.body.prepend(topBar);
+-                }
+-
+-                // Create toggle button
+-                const toggleBtn = document.createElement('button');
+-                toggleBtn.style.cssText = `
+-                    padding: 8px 12px;
+-                    background: ${refreshEnabled ? '#0078D4' : '#555'};
+-                    color: #fff;
+-                    border: none;
+-                    border-radius: 6px;
+-                    cursor: pointer;
+-                    font-size: 14px;
+-                    font-family: "Segoe UI", sans-serif;
+-                    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+-                    margin-left: auto;
+-                `;
+-
+-                function updateButtonLabel() {
+-                    toggleBtn.textContent = `⏳ Auto-Refresh: ${refreshEnabled ? 'ON' : 'OFF'} (${secondsLeft}s)`;
+-                }
+-
+-                toggleBtn.addEventListener('click', () => {
+-                    const wasDisabled = !refreshEnabled;
+-                    refreshEnabled = !refreshEnabled;
+-                    localStorage.setItem(STORAGE_KEY, refreshEnabled);
+-                    toggleBtn.style.background = refreshEnabled ? '#0078D4' : '#555';
+-                    Logger.log(`[AWOS Core] Auto-refresh ${refreshEnabled ? 'enabled' : 'disabled'} by user`);
+-                    updateButtonLabel();
+-
+-                    if (wasDisabled && refreshEnabled) {
+-                        Logger.log(`[AWOS Core] Auto-refresh re-enabled — refreshing immediately`);
+-                        forcePageReload();
+-
+-                    }
+-                });
+-
+-                topBar.appendChild(toggleBtn);
+-                updateButtonLabel();
+-
+-                // Countdown loop
+-                setInterval(() => {
+-                    if (refreshEnabled) {
+-                        secondsLeft--;
+-                        if (secondsLeft <= 0) {
+-                            Logger.log(`[AWOS Core] Auto-refresh triggered at ${new Date().toLocaleTimeString()}`);
+-                            forcePageReload();
+-                        }
+-                    } else {
+-                        secondsLeft = REFRESH_INTERVAL; // reset if disabled
+-                    }
+-                    updateButtonLabel();
+-                }, 1000); // every second
+-            }
+-        }, 10);
+-        // At the very end of setupAutoRefreshToggle() closure
+-        window.getAwosRefreshStatus = function () {
+-            return {
+-                enabled: refreshEnabled,
+-                secondsLeft: secondsLeft
+-            };
+-        };
+-
+-        // Allow modal to trigger parent refresh
+-        window.triggerAwosRefresh = () => {
+-            forcePageReload();
+-        };
+-
+-        // Live updates to any listeners
+-        const bc = new BroadcastChannel('awos-refresh-sync');
+-        setInterval(() => {
+-            bc.postMessage({
+-                enabled: refreshEnabled,
+-                secondsLeft
+-            });
+-        }, 1000);
+-
+-
+-    })();
+-
+-    (function waitForHeadAndInjectFavicon() {
+-        const inject = () => {
+-            const link = document.createElement('link');
+-            link.rel = 'icon';
+-            link.type = 'image/png';
+-            link.href = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xw8AAoMBgZkKXnUAAAAASUVORK5CYII=';
+-            document.head.appendChild(link);
+-            Logger.log('[AWOS Core] Dummy favicon injected safely');
+-        };
+-
+-        const interval = setInterval(() => {
+-            if (document.head) {
+-                clearInterval(interval);
+-                inject();
+-            }
+-        }, 10);
+-    })();
+-
+-    function forcePageReload() {
+-        window.onbeforeunload = null;
+-        window.onunload = null;
+-        location.href = location.href;
+-    }
+-
+-    function purgeHeaderFooter() {
+-        Logger.group('Removing header and footer elements', () => {
+-            const selectors = [
+-                '#wb-lng', '#gcwu-sig', '#gcwu-gmap', '#gcwu-bnr', '#wb-srch', '#wb-bc',
+-                '#wb-sm', '#wb-sttl', '#wb-info', '#wb-sec', '#wb-bar', '#wb-glb-mn', '#wb-cont',
+-                'header', '#wb-nav', '#wb-foot', '#gcwu-foot', '#gcwu-date-mod', '#wb-srch-footer',
+-                '#wb-info-footer', '#wb-tphp', '#wb-dtmd', '#wb-ftr', 'footer'
+-            ];
+-
+-            selectors.forEach(sel => {
+-                const el = document.querySelector(sel);
+-                if (el) {
+-                    Logger.log(`Removing ${sel}`, el);
+-                    el.remove();
+-                }
+-            });
+-
+-            document.querySelectorAll('#wb-tphp a, .skip-links a').forEach(link => {
+-                const text = link.textContent.trim().toLowerCase();
+-                if (text.includes('skip to content') || text.includes('skip to institutional links')) {
+-                    Logger.log('Removing skip link', link);
+-                    link.remove();
+-                }
+-            });
+-
+-            document.querySelectorAll('header, footer').forEach(el => {
+-                if (el.innerHTML.trim() === '') {
+-                    Logger.log('Removing empty container', el);
+-                    el.remove();
+-                }
+-            });
+-        });
+-    }
+-    function monitorFooterResurrection() {
+-        const interval = setInterval(() => {
+-            const footer = document.querySelector('footer, #wb-foot, #gcwu-foot');
+-            if (footer) {
+-                Logger.log('Footer reappeared — removing again', footer);
+-                footer.remove();
+-            }
+-        }, 500);
+-        setTimeout(() => clearInterval(interval), 5000);
+-    }
+-    function injectResetFloaterButton() {
+-        const refreshBtn = document.querySelector('button, input[type="button"], a[href*="refresh"]');
+-        if (!refreshBtn || !refreshBtn.parentElement) return;
+-
+-        const resetBtn = document.createElement('button');
+-        resetBtn.textContent = '🧹 Reset Floater';
+-        resetBtn.style.marginLeft = '10px';
+-        resetBtn.style.padding = '4px 8px';
+-        resetBtn.style.fontSize = '12px';
+-        resetBtn.style.cursor = 'pointer';
+-        resetBtn.style.background = '#cc0000';
+-        resetBtn.style.color = '#fff';
+-        resetBtn.style.border = '1px solid #900';
+-        resetBtn.style.borderRadius = '4px';
+-
+-        resetBtn.onclick = () => {
+-            const confirmReset = confirm('Are you sure you want to reset the floater?\nThis will clear its position, size, and last viewed detail.');
+-            if (!confirmReset) return;
+-
+-            localStorage.removeItem('awos-panel-position');
+-            localStorage.removeItem('awos-panel-size');
+-            localStorage.removeItem('awos-last-detail-url');
+-            localStorage.removeItem('awos-last-panel-snapshot');
+-            localStorage.removeItem('awos-last-timestamp');
+-            location.reload();
+-        };
+-
+-        refreshBtn.parentElement.appendChild(resetBtn);
+-    }
+-
+-    window.create_time_popup = function (el) {
+-        const epoch = parseInt(el.dataset.epochvalue, 10);
+-        const offset = parseInt(el.dataset.tzoffset, 10) * 60; // minutes to seconds
+-        const localTime = new Date((epoch + offset) * 1000).toLocaleString();
+-
+-        const tooltip = document.createElement('div');
+-        tooltip.textContent = `Local Time: ${localTime}`;
+-        tooltip.style.position = 'absolute';
+-        tooltip.style.background = '#222';
+-        tooltip.style.color = '#fff';
+-        tooltip.style.padding = '6px 10px';
+-        tooltip.style.borderRadius = '6px';
+-        tooltip.style.fontSize = '14px';
+-        tooltip.style.pointerEvents = 'none';
+-        tooltip.style.zIndex = '9999';
+-
+-        document.body.appendChild(tooltip);
+-
+-        const rect = el.getBoundingClientRect();
+-        tooltip.style.top = `${rect.bottom + window.scrollY + 8}px`;
+-        tooltip.style.left = `${rect.left + window.scrollX}px`;
+-
+-        setTimeout(() => tooltip.remove(), 1500);
+-    };
+-
+-    function findAllMouseoverElements() {
+-        const elements = Array.from(document.querySelectorAll('[onmouseover]'));
+-        Logger.log(`[findAllMouseoverElements] Found ${elements.length} elements with onmouseover`);
+-        return elements;
+-    }
+-
+-    function patchLegacyMouseoverHandlers() {
+-        const elements = findAllMouseoverElements();
+-
+-        elements.forEach(el => {
+-            const handler = el.getAttribute('onmouseover');
+-
+-            if (handler?.includes('create_time_popup')) {
+-                Logger.log(`[patchLegacyMouseoverHandlers] Rewiring popup for element:`, el);
+-
+-                // Remove the inline handler to prevent ReferenceError
+-                el.removeAttribute('onmouseover');
+-
+-                // Attach a safe event listener
+-                el.addEventListener('mouseover', () => {
+-                    if (typeof window.create_time_popup === 'function') {
+-                        window.create_time_popup(el);
+-                    } else {
+-                        Logger.log('[patchLegacyMouseoverHandlers] create_time_popup not yet defined');
+-                    }
+-                });
+-            }
+-        });
+-
+-        Logger.log(`[patchLegacyMouseoverHandlers] Patched ${elements.length} mouseover elements`);
+-    }
+-
+-    /*function interceptMouseoverPopups() {
+-        const elements = findAllMouseoverElements();
+-
+-        elements.forEach((el, index) => {
+-            const originalHandler = el.getAttribute('onmouseover');
+-            el.removeAttribute('onmouseover');
+-
+-            el.addEventListener('mouseenter', () => {
+-                Logger.log(`[interceptMouseoverPopups] Mouseover intercepted on element #${index}`);
+-
+-            });
+-        });
+-    }*/
+-
+-    function observeAWOS() {
+-        const waitForBody = setInterval(() => {
+-            if (document.body) {
+-                clearInterval(waitForBody);
+-
+-                const observer = new MutationObserver(mutations => {
+-                    mutations.forEach(mutation => mutationLog.push(mutation));
+-                    clearTimeout(observer._debounce);
+-
+-                    observer._debounce = setTimeout(() => {
+-                        const awosPanel = document.querySelector('#awos, .awos-report, .report-panel, main');
+-
+-                        if (awosPanel && !layoutApplied) {
+-                            const mutationSummary = { attributes: 0, childList: 0, subtree: 0, characterData: 0 };
+-                            mutations.forEach(mutation => { mutationSummary[mutation.type]++; });
+-
+-                            Logger.group(`${mutationLog.length} mutation(s) detected`, () => {
+-                                Logger.log('🧬 Mutation Type Breakdown:', mutationSummary);
+-                                mutationLog.forEach((mutation, index) => {
+-                                    Logger.group(`Mutation ${index + 1} [${mutation.type}]`, () => {
+-                                        Logger.log('Target', mutation.target);
+-                                        if (mutation.addedNodes.length) Logger.log('Added Nodes', mutation.addedNodes);
+-                                        if (mutation.removedNodes.length) Logger.log('Removed Nodes', mutation.removedNodes);
+-                                    });
+-                                });
+-                            });
+-
+-                            if (mutationLog.length > 100) {
+-                                Logger.group('⚠️ Mutation Spike Alert', () => {
+-                                    Logger.warn(`Spike detected: ${mutationLog.length} mutations`);
+-                                    Logger.log(`Timestamp: ${new Date().toISOString()}`);
+-                                    Logger.log('Sample mutated nodes:');
+-                                    mutationLog.slice(0, 5).forEach((mutation, i) => {
+-                                        Logger.log(`Mutation ${i + 1}:`, mutation.target);
+-                                    });
+-                                });
+-                            }
+-
+-                            purgeHeaderFooter()
+-                            monitorFooterResurrection()
+-
+-                            if (!window.__awosCleanupDispatched) {
+-                                window.__awosCleanupDispatched = true;
+-                                const event = new CustomEvent('AWOSCoreCleanupComplete');
+-                                window.dispatchEvent(event);
+-                                Logger.log('📢 Layout Enhancer dispatched successfully');
+-                            }
+-
+-                            layoutApplied = true;
+-
+-                            setTimeout(() => {
+-                                observer.disconnect();
+-                                Logger.log('observeAWOS Observer disconnected after delay');
+-                                document.dispatchEvent(new Event("AWOSCoreReady"));
+-                            }, 250);
+-
+-
+-                        }
+-                    }, 100);
+-                });
+-
+-                observer.observe(document.body, { childList: true, subtree: true });
+-            }
+-        }, 10);
+-
+-
+-    }
+-
+-    window.addEventListener('DOMContentLoaded', () => {
+-        injectResetFloaterButton();
+-        patchLegacyMouseoverHandlers();
+-        Logger.log('🧭 DOM fully loaded');
+-
+-    });
+-
+-    Logger.log('✅ Starting AWOS cleanup...');
+-    observeAWOS();
+-})();
+\ No newline at end of file
+Index: Working copies/AWOS Floating Panel 3.5.1 (CLD Detail styling).user.js
+===================================================================
+diff --git a/Working copies/AWOS Floating Panel 3.5.1 (CLD Detail styling).user.js b/Working copies/AWOS Floating Panel 3.5.1 (CLD Detail styling).user.js
+deleted file mode 100644
+--- a/Working copies/AWOS Floating Panel 3.5.1 (CLD Detail styling).user.js	(revision 0ee9162728e0a21ab7249de2b0588d2a64935a27)
++++ /dev/null	(revision 0ee9162728e0a21ab7249de2b0588d2a64935a27)
+@@ -1,749 +0,0 @@
+-// ==UserScript==
+-// @name         AWOS Floating Panel 3.5.1 (CLD Detail styling)
+-// @namespace    chris.awos
+-// @version      3.5.1
+-// @description  Floating AWOS detail viewer with drag, resize, and persistent state
+-// @match        https://met.forces.gc.ca/english/airops/AWOS/*
+-// @grant        none
+-// ==/UserScript==
+-
+-(function () {
+-    'use strict';
+-
+-    const PANEL_ID = 'awos-floating-panel';
+-    const CONTENT_ID = 'awos-panel-content';
+-    const CLOSE_ID = 'awos-panel-close';
+-    const STORAGE_URL_KEY = 'awos-last-detail-url';
+-    const STORAGE_SNAPSHOT_KEY = 'awos-last-panel-snapshot';
+-    const STORAGE_TIMESTAMP_KEY = 'awos-last-timestamp';
+-    const STORAGE_POSITION_KEY = 'awos-panel-position';
+-    const STORAGE_SIZE_KEY = 'awos-panel-size';
+-
+-    let isDragging = false;
+-    let offsetX = 0;
+-    let offsetY = 0;
+-
+-    function createPanel(updatedText = '') {
+-        if (document.getElementById(PANEL_ID)) return;
+-
+-        const panel = document.createElement('div');
+-        panel.id = PANEL_ID;
+-        Object.assign(panel.style, {
+-            position: 'fixed',
+-            background: '#fff',
+-            border: '1px solid #ccc',
+-            boxShadow: '0 0 10px rgba(0,0,0,0.3)',
+-            zIndex: '9999',
+-            display: 'flex',
+-            flexDirection: 'column',
+-            overflow: 'auto',
+-            minWidth: '300px',
+-            minHeight: '150px',
+-            padding: '10px'
+-        });
+-
+-        // Restore position and size
+-        const savedPos = JSON.parse(localStorage.getItem(STORAGE_POSITION_KEY));
+-        const savedSize = JSON.parse(localStorage.getItem(STORAGE_SIZE_KEY));
+-        panel.style.top = savedPos?.top || '20px';
+-        panel.style.left = savedPos?.left || '20px';
+-        panel.style.width = savedSize?.width || '400px';
+-        panel.style.height = savedSize?.height || '600px';
+-
+-        // Title bar
+-        const titleBar = document.createElement('div');
+-        titleBar.id = 'awos-panel-title';
+-        Object.assign(titleBar.style, {
+-            background: '#0077cc',
+-            color: 'white',
+-            padding: '6px 10px',
+-            fontWeight: 'bold',
+-            display: 'flex',
+-            flexWrap: 'nowrap',
+-            overflow: 'hidden',
+-            justifyContent: 'space-between',
+-            alignItems: 'center',
+-            cursor: 'move'
+-        });
+-        // Title text
+-        const titleText = document.createElement('span');
+-        titleText.id = 'awos-panel-title-text';
+-        titleText.textContent = `AWOS Detail Viewer${updatedText ? ' — ' + updatedText : ''}`;
+-
+-        // Close button
+-        const closeBtn = document.createElement('button');
+-        closeBtn.id = CLOSE_ID;
+-        closeBtn.textContent = '×';
+-        Object.assign(closeBtn.style, {
+-            fontSize: '20px',
+-            border: 'none',
+-            background: 'transparent',
+-            color: 'white',
+-            cursor: 'pointer',
+-            marginLeft: 'auto', // Pushes it to the right
+-            padding: '0 6px',
+-            lineHeight: '1',
+-            display: 'inline-block'
+-        });
+-        closeBtn.onclick = () => {
+-            panel.remove();
+-            localStorage.removeItem(STORAGE_URL_KEY);
+-            localStorage.removeItem(STORAGE_SNAPSHOT_KEY);
+-            localStorage.removeItem(STORAGE_TIMESTAMP_KEY);
+-            console.log('Floater closed and snapshot cleared.');
+-        };
+-
+-        let isDragging = false, offsetX = 0, offsetY = 0;
+-
+-        titleBar.addEventListener('mousedown', (e) => {
+-            isDragging = true;
+-            const rect = panel.getBoundingClientRect();
+-            offsetX = e.clientX - rect.left;
+-            offsetY = e.clientY - rect.top;
+-            document.body.style.userSelect = 'none';
+-        });
+-
+-        document.addEventListener('mousemove', (e) => {
+-            if (!isDragging) return;
+-            panel.style.left = `${e.clientX - offsetX}px`;
+-            panel.style.top = `${e.clientY - offsetY}px`;
+-            localStorage.setItem(STORAGE_POSITION_KEY, JSON.stringify({
+-                top: panel.style.top,
+-                left: panel.style.left
+-            }));
+-        });
+-
+-        document.addEventListener('mouseup', () => {
+-            isDragging = false;
+-            document.body.style.userSelect = '';
+-        });
+-
+-        // Content area
+-        const content = document.createElement('div');
+-        content.id = CONTENT_ID;
+-        Object.assign(content.style, {
+-            flex: '1',
+-            overflowY: 'auto',
+-            padding: '10px'
+-        });
+-
+-        const style = document.createElement('style');
+-        style.textContent = `
+-      #awos-floating-panel {
+-        font-family: Arial, sans-serif;
+-        font-size: 15px;
+-        color: #333;
+-      }
+-
+-      #awos-detail-container {
+-        border: 2px solid #0077cc;
+-        padding: 12px;
+-        margin: 10px 0;
+-        background-color: #f9f9f9;
+-        font-family: monospace;
+-        font-size: 0.85em;
+-        overflow-x: auto;
+-      }
+-
+-      .awos-detail-header {
+-        font-weight: bold;
+-        font-size: 1.1em;
+-        margin-bottom: 8px;
+-        color: #0055aa;
+-      }
+-
+-      .awos-cloud-table,
+-      .awos-summary-table {
+-        width: 100%;
+-        border-collapse: collapse;
+-        margin-bottom: 16px;
+-      }
+-
+-      th, td {
+-        border: 1px solid #ccc;
+-        padding: 4px 6px;
+-        text-align: center;
+-      }
+-
+-      .awos-cloud-table thead {
+-        background-color: #f0f0f0;
+-      }
+-
+-      .awos-summary-table thead {
+-        background-color: #e0e0ff;
+-      }
+-
+-      .awos-detail-header {
+-      font-weight: bold;
+-      font-size: 1.1em;
+-      margin-bottom: 10px;
+-      color: #0055aa;
+-    }
+-
+-    .awos-detail-container table {
+-      border-collapse: collapse;
+-      margin-bottom: 20px;
+-      width: 100%;
+-    }
+-
+-    .awos-detail-container th, .awos-detail-container td {
+-      border: 1px solid #ccc;
+-      padding: 4px 8px;
+-      text-align: left;
+-    }
+-
+-    `;
+-
+-        document.head.appendChild(style); // ✅ Correctly injects styles
+-        document.body.appendChild(panel); // ✅ Adds your floating panel
+-
+-
+-        panel.appendChild(titleBar);
+-        titleBar.appendChild(titleText);
+-        titleBar.appendChild(closeBtn);
+-        panel.appendChild(content);
+-
+-        //Restore Block
+-        setTimeout(() => {
+-            const floaterSnapshot = JSON.parse(localStorage.getItem('floaterSnapshot'));
+-            if (floaterSnapshot) {
+-                const { savedWidth, savedHeight, windowHeight } = floaterSnapshot;
+-
+-                const safeHeight = Math.min(savedHeight, window.innerHeight - 50);
+-                panel.style.width = `${savedWidth}px`;
+-                panel.style.height = `${safeHeight}px`;
+-
+-                panel.style.maxHeight = `${window.innerHeight - 50}px`;
+-                panel.style.overflow = 'hidden';
+-
+-
+-                // Optional: restore position if saved
+-                if (floaterSnapshot.left !== undefined && floaterSnapshot.top !== undefined) {
+-                    panel.style.left = `${floaterSnapshot.left}px`;
+-                    panel.style.top = `${floaterSnapshot.top}px`;
+-                    panel.style.position = 'fixed';
+-                }
+-            }
+-
+-            const savedSize = localStorage.getItem(STORAGE_SIZE_KEY);
+-            if (savedSize) {
+-                try {
+-                    const { width, height } = JSON.parse(savedSize);
+-                    const safeHeight = Math.min(parseInt(height), window.innerHeight - 50);
+-                    panel.style.width = width;
+-                    panel.style.height = `${safeHeight}px`;
+-
+-
+-                    // Delay logging until panel is styled
+-                    requestAnimationFrame(() => {
+-                        const rect = panel.getBoundingClientRect();
+-                        console.log('Restoring floater size:', {
+-                            savedWidth: width,
+-                            savedHeight: height,
+-                            computedWidth: rect.width,
+-                            computedHeight: rect.height,
+-                            windowHeight: window.innerHeight
+-                        });
+-                    });
+-                } catch (e) {
+-                    console.warn('Invalid size data:', e);
+-                }
+-            }
+-
+-        }, 0);
+-
+-        // Save Block on mouseup
+-        panel.addEventListener('mouseup', () => {
+-            if (document.body.contains(panel)) {
+-                const rect = panel.getBoundingClientRect();
+-                const floaterSnapshot = {
+-                    styleWidth: panel.style.width,
+-                    styleHeight: panel.style.height,
+-                    computedWidth: rect.width,
+-                    computedHeight: rect.height,
+-                    windowHeight: window.innerHeight,
+-                    savedWidth: rect.width,
+-                    savedHeight: rect.height,
+-                    left: rect.left,
+-                    top: rect.top
+-                };
+-
+-                // Clamp to viewport
+-                const clampedWidth = Math.min(rect.width, window.innerWidth - rect.left);
+-                const clampedHeight = Math.min(rect.height, window.innerHeight - rect.top);
+-
+-                console.log('Saving floater size:', {
+-                    clampedWidth,
+-                    clampedHeight,
+-                    windowHeight: window.innerHeight
+-                });
+-
+-                localStorage.setItem('floaterSnapshot', JSON.stringify(floaterSnapshot));
+-                localStorage.setItem(STORAGE_SIZE_KEY, JSON.stringify({
+-                    width: `${clampedWidth}px`,
+-                    height: `${clampedHeight}px`
+-                }));
+-            }
+-        });
+-
+-        // Edge resizers
+-        ['top', 'right', 'bottom', 'left'].forEach(edge => {
+-            const resizer = document.createElement('div');
+-            Object.assign(resizer.style, {
+-                position: 'absolute',
+-                zIndex: '10000',
+-                background: 'transparent',
+-                pointerEvents: 'auto',
+-                [edge]: '0',
+-                cursor: {
+-                    top: 'n-resize',
+-                    bottom: 's-resize',
+-                    left: 'w-resize',
+-                    right: 'e-resize'
+-                }[edge]
+-
+-            });
+-            if (edge === 'top' || edge === 'bottom') {
+-                resizer.style.left = '0';
+-                resizer.style.width = '100%';
+-                resizer.style.height = '6px';
+-            } else {
+-                resizer.style.top = '0';
+-                resizer.style.height = '100%';
+-                resizer.style.width = '6px';
+-            }
+-            panel.appendChild(resizer);
+-
+-            resizer.addEventListener('mousedown', (e) => {
+-                e.preventDefault();
+-                const startX = e.clientX;
+-                const startY = e.clientY;
+-                const startWidth = panel.offsetWidth;
+-                const startHeight = panel.offsetHeight;
+-                const startTop = panel.offsetTop;
+-                const startLeft = panel.offsetLeft;
+-
+-                function onMouseMove(ev) {
+-                    if (edge === 'right') {
+-                        panel.style.width = `${startWidth + (ev.clientX - startX)}px`;
+-                    } else if (edge === 'bottom') {
+-                        panel.style.height = `${startHeight + (ev.clientY - startY)}px`;
+-                    } else if (edge === 'left') {
+-                        const newWidth = startWidth - (ev.clientX - startX);
+-                        const newLeft = startLeft + (ev.clientX - startX);
+-                        panel.style.width = `${newWidth}px`;
+-                        panel.style.left = `${newLeft}px`;
+-                    } else if (edge === 'top') {
+-                        const newHeight = startHeight - (ev.clientY - startY);
+-                        const newTop = startTop + (ev.clientY - startY);
+-                        panel.style.height = `${newHeight}px`;
+-                        panel.style.top = `${newTop}px`;
+-                    }
+-                }
+-
+-                function onMouseUp() {
+-                    document.removeEventListener('mousemove', onMouseMove);
+-                    document.removeEventListener('mouseup', onMouseUp);
+-                    document.removeEventListener('mouseup', saveFloaterSizeOnce);
+-                }
+-                document.addEventListener('mousemove', onMouseMove);
+-                document.addEventListener('mouseup', onMouseUp);
+-            });
+-        });
+-
+-        const cornerResizers = [
+-            { name: 'top-left', cursor: 'nw-resize', top: '0', left: '0' },
+-            { name: 'top-right', cursor: 'ne-resize', top: '0', right: '0' },
+-            { name: 'bottom-left', cursor: 'sw-resize', bottom: '0', left: '0' },
+-            { name: 'bottom-right', cursor: 'se-resize', bottom: '0', right: '0' } // already exists, but we’ll unify logic
+-        ];
+-        cornerResizers.forEach(corner => {
+-            const resizer = document.createElement('div');
+-            Object.assign(resizer.style, {
+-                position: 'absolute',
+-                width: '12px',
+-                height: '12px',
+-                cursor: corner.cursor,
+-                zIndex: '10001',
+-                background: 'transparent',
+-                ...corner
+-            });
+-            panel.appendChild(resizer);
+-
+-            resizer.addEventListener('mousedown', (e) => {
+-                e.preventDefault();
+-                const startX = e.clientX;
+-                const startY = e.clientY;
+-                const startWidth = panel.offsetWidth;
+-                const startHeight = panel.offsetHeight;
+-                const startTop = panel.offsetTop;
+-                const startLeft = panel.offsetLeft;
+-
+-                function onMouseMove(ev) {
+-                    const dx = ev.clientX - startX;
+-                    const dy = ev.clientY - startY;
+-
+-                    if (corner.name.includes('right')) {
+-                        panel.style.width = `${startWidth + dx}px`;
+-                    }
+-                    if (corner.name.includes('left')) {
+-                        const newWidth = startWidth - dx;
+-                        if (newWidth > 300) {
+-                            panel.style.width = `${newWidth}px`;
+-                            panel.style.left = `${startLeft + dx}px`;
+-                        }
+-                    }
+-                    if (corner.name.includes('bottom')) {
+-                        panel.style.height = `${startHeight + dy}px`;
+-                    }
+-                    if (corner.name.includes('top')) {
+-                        const newHeight = startHeight - dy;
+-                        if (newHeight > 150) {
+-                            panel.style.height = `${newHeight}px`;
+-                            panel.style.top = `${startTop + dy}px`;
+-                        }
+-                    }
+-                }
+-
+-                function onMouseUp() {
+-                    document.removeEventListener('mousemove', onMouseMove);
+-                    document.removeEventListener('mouseup', onMouseUp);
+-                    localStorage.setItem(STORAGE_SIZE_KEY, JSON.stringify({
+-                        width: panel.offsetWidth,
+-                        height: panel.offsetHeight
+-                    }));
+-                    localStorage.setItem(STORAGE_POSITION_KEY, JSON.stringify({
+-                        top: panel.style.top,
+-                        left: panel.style.left
+-                    }));
+-                }
+-
+-                document.addEventListener('mousemove', onMouseMove);
+-                document.addEventListener('mouseup', onMouseUp);
+-            });
+-        });
+-
+-    }
+-
+-    function updateTitleBar(updatedText, isSnapshot = false) {
+-        const titleText = document.getElementById('awos-panel-title-text');
+-        const titleBar = document.getElementById('awos-panel-title');
+-        if (!titleText || !titleBar) return;
+-
+-        titleText.textContent = `AWOS Detail Viewer${updatedText ? ' — ' + updatedText : ''}`;
+-        titleBar.style.background = isSnapshot ? '#ffcc00' : '#0077cc';
+-        titleBar.style.color = isSnapshot ? '#000' : 'white';
+-        titleBar.title = isSnapshot ? 'Snapshot restored — data may be outdated' : '';
+-    }
+-
+-    function saveFloaterSizeOnce() {
+-        const rect = panel.getBoundingClientRect();
+-        const clampedWidth = Math.min(rect.width, window.innerWidth - rect.left);
+-        const clampedHeight = Math.min(rect.height, window.innerHeight - rect.top);
+-
+-        panel.style.width = `${clampedWidth}px`;
+-        panel.style.height = `${clampedHeight}px`;
+-
+-        localStorage.setItem(STORAGE_SIZE_KEY, JSON.stringify({
+-            width: `${clampedWidth}px`,
+-            height: `${clampedHeight}px`
+-        }));
+-
+-        document.removeEventListener('mouseup', saveFloaterSizeOnce);
+-    }
+-
+-    function stripDetailText(rawHTML) {
+-        const parser = new DOMParser();
+-        const doc = parser.parseFromString(rawHTML, 'text/html');
+-        const bodyText = doc.body.innerText;
+-        let lines = bodyText.split('\n');
+-
+-        const detailIdx = lines.findIndex(line => line.startsWith('Detail -'));
+-        if (detailIdx > -1) lines = lines.slice(detailIdx);
+-
+-        const configPatterns = [
+-            /^Search Back:/, /^Search from/, /^Search From Time/, /^Reset Detail/,
+-            /^Use\/sample every/, /^Maximum number of records/, /^Format to display/,
+-            /^Data type to display/, /^Detail to display/, /^Show Errored\/Malformed/,
+-            /^\(\s*errored\/total\):/, /^Contact us/, /^Questions or comments\?/,
+-            /^About/, /^Notices/, /^Canada.gc.ca/, /^Visit Canada.gc.ca/
+-        ];
+-        lines = lines.filter(line => !configPatterns.some(pattern => pattern.test(line.trim())));
+-
+-        let summaryFromText = '';
+-        lines = lines.filter(line => {
+-            if (line.startsWith('Summary From')) {
+-                summaryFromText = line.trim();
+-                return false;
+-            }
+-            return !line.startsWith('Number of reports used');
+-        });
+-
+-        lines = lines.filter(line => !line.startsWith('Updated:'));
+-
+-        console.log("Summary:", summaryFromText);
+-        return {
+-            cleanedText: lines.join('\n'),
+-            summaryFromText // or whatever format you're using
+-
+-        };
+-    }
+-
+-    function extractUpdatedTimestamp(rawHTML) {
+-        const parser = new DOMParser();
+-        const doc = parser.parseFromString(rawHTML, 'text/html');
+-        const abbr = doc.querySelector('abbr.timepopup');
+-        return abbr ? `Updated: ${abbr.textContent.trim()}` : '';
+-    }
+-
+-    function saveSnapshot(content) {
+-        try {
+-            localStorage.setItem(STORAGE_SNAPSHOT_KEY, content.innerHTML);
+-            console.log('Snapshot saved.');
+-        } catch (e) {
+-            console.error('Failed to save snapshot:', e);
+-        }
+-    }
+-
+-    function restoreSnapshot() {
+-        const snapshot = localStorage.getItem(STORAGE_SNAPSHOT_KEY);
+-        const restoredTimestamp = localStorage.getItem(STORAGE_TIMESTAMP_KEY) || '';
+-        if (!snapshot) {
+-            Logger.info('No floater snapshot found in localStorage. Skipping restore.');
+-            return;
+-        }
+-
+-        window.requestAnimationFrame(() => {
+-            setTimeout(() => {
+-                console.log('Restoring floater from snapshot...');
+-                createPanel(restoredTimestamp);
+-                updateTitleBar(restoredTimestamp, true)
+-                const content = document.getElementById(CONTENT_ID);
+-                if (content) content.innerHTML = snapshot;
+-            }, 300);
+-        });
+-    }
+-
+-    function loadDetail(url) {
+-        fetch(url)
+-            .then(res => res.text())
+-            .then(html => {
+-                const updatedText = extractUpdatedTimestamp(html);
+-                localStorage.setItem(STORAGE_TIMESTAMP_KEY, updatedText);
+-
+-                createPanel(updatedText);
+-                updateTitleBar(updatedText, false)
+-
+-                const { cleanedText, summaryFromText } = stripDetailText(html);
+-
+-                const content = document.getElementById(CONTENT_ID);
+-
+-                if (content) {
+-                    content.innerHTML = `<pre style="white-space: pre-wrap;">${cleanedText}</pre>`;
+-                    styleCloudDetail(content, summaryFromText);
+-                    saveSnapshot(content);
+-                }
+-                localStorage.setItem(STORAGE_URL_KEY, url);
+-            });
+-
+-    }
+-
+-    function handleClick(e) {
+-        const link = e.target.closest('a');
+-        if (!link || !link.href.includes('/AWOS/?id=') || !link.href.includes('&detail=')) return;
+-
+-        e.preventDefault();
+-        e.stopImmediatePropagation();
+-
+-        loadDetail(link.href);
+-    }
+-
+-    function styleCloudDetail(floaterContent, summaryFromText = '') {
+-
+-        const rawText = floaterContent.textContent;
+-        const cloudStart = rawText.indexOf('Detail - CLD');
+-        if (cloudStart === -1) return;
+-        const cloudBlock = rawText.slice(cloudStart);
+-        const lines = cloudBlock.split('\n').map(line => line.trim()).filter(Boolean);
+-        const summaryLineIndex = lines.findIndex(line => line.startsWith('Summary From'));
+-        if (summaryLineIndex !== -1) {
+-            summaryFromText = lines[summaryLineIndex];
+-        }
+-        const summaryStart = lines.findIndex(line => line.startsWith('Summary Type'));
+-        const samplingLines = lines.slice(3, summaryStart);
+-        const summaryLines = lines.slice(summaryStart + 1);
+-
+-        // Determine detail type from URL
+-        const detailType = new URL(window.location.href).searchParams.get('detail') || 'Cloud';
+-
+-        // Create container
+-        const detailContainer = document.createElement('div');
+-        detailContainer.id = 'awos-detail-container';
+-
+-        if (summaryFromText) {
+-            const summaryHeader = document.createElement('div');
+-            summaryHeader.textContent = summaryFromText;
+-            summaryHeader.style.cssText = `
+-        font-weight: bold;
+-        font-size: 14px;
+-        margin: 12px 0 4px;
+-        padding: 4px 8px;
+-        background-color: #e8f0ff;
+-        border-left: 4px solid #4285f4;
+-      `;
+-            detailContainer.appendChild(summaryHeader);
+-        }
+-
+-        // Add header to top of floater
+-        const floaterHeader = document.createElement('div');
+-        floaterHeader.textContent = `Detail – ${detailType.toUpperCase()}`;
+-        floaterHeader.style.cssText = `
+-      font-weight: bold;
+-      font-size: 16px;
+-      padding: 8px 12px;
+-      background-color: #f0f0f0;
+-      border-bottom: 1px solid #ccc;
+-    `;
+-        detailContainer.appendChild(floaterHeader);
+-
+-        // Sampling Table
+-        const samplingTable = document.createElement('table');
+-        samplingTable.className = 'awos-cloud-table';
+-        samplingTable.innerHTML = `
+-      <thead>
+-        <tr><th>Stn</th><th>SP</th><th>Date</th><th>Time</th>
+-            <th>Layer 1</th><th>Layer 2</th><th>Layer 3</th>
+-            <th>Layer 4</th><th>Layer 5</th></tr>
+-      </thead>
+-      <tbody>
+-        ${samplingLines.map(line => {
+-            const parts = line.match(/(\w+)?\s*(\w{2})?\s*(\d{2})\s*(\d{2}:\d{2})\s*(.*?)$/);
+-            if (!parts) return '';
+-            const [_, stn, sp, dd, time, layers] = parts;
+-            const layerParts = layers.trim().split(/\s+/);
+-            while (layerParts.length < 5) layerParts.push('');
+-            return `<tr>
+-            <td>${stn || ''}</td><td>${sp || ''}</td><td>${dd}</td><td>${time}</td>
+-            ${layerParts.map(l => `<td>${l}</td>`).join('')}
+-          </tr>`;
+-        }).join('')}
+-      </tbody>
+-    `;
+-
+-        // Summary Table
+-        const summaryTable = document.createElement('table');
+-        summaryTable.className = 'awos-summary-table';
+-        const summaryHeader = document.createElement('div');
+-        summaryHeader.textContent = summaryFromText || 'Hourly Summary';
+-        summaryHeader.style.cssText = `
+-      font-weight: bold;
+-      font-size: 14px;
+-      margin: 12px 0 4px;
+-      padding: 4px 8px;
+-      background-color: #e8f0ff;
+-      border-left: 4px solid #4285f4;
+-    `;
+-
+-
+-
+-        summaryTable.innerHTML = `
+-      <thead>
+-        <tr><th>Type</th><th>Value</th><th>Unit</th><th>Stn</th><th>Date</th><th>Time</th></tr>
+-      </thead>
+-      <tbody>
+-        ${summaryLines.map(line => {
+-            const type  = line.slice(0, 18).trim();
+-            const value = line.slice(19, 28).trim();
+-            const unit  = line.slice(29, 33).trim();
+-            const stn   = line.slice(34, 44).trim();
+-            const dd    = line.slice(44, 50).trim();
+-            const time  = line.slice(50).trim();
+-            return `<tr>
+-            <td>${type}</td><td>${value}</td><td>${unit}</td>
+-            <td>${stn}</td><td>${dd}</td><td>${time}</td>
+-          </tr>`;
+-        }).join('')}
+-      </tbody>
+-    `;
+-
+-        /*const summaryTable = document.createElement('table');
+-        summaryTable.className = 'awos-summary-table';
+-        summaryTable.innerHTML = `
+-          <thead>
+-            <tr><th>Type</th><th>Value</th><th>Unit</th><th>Stn</th><th>Date</th><th>Time</th></tr>
+-          </thead>
+-          <tbody>
+-            ${summaryLines.map(line => {
+-              const parts = line.match(/(.+?)\s+(\S+)\s+(\S*)\s+(\S*)\s*(\d{2})?\s*(\d{2}:\d{2})?/);
+-              if (!parts) return '';
+-              const [_, type, value, unit, stn, dd, time] = parts;
+-              return `<tr>
+-                <td>${type}</td><td>${value}</td><td>${unit}</td>
+-                <td>${stn}</td><td>${dd || ''}</td><td>${time || ''}</td>
+-              </tr>`;
+-            }).join('')}
+-          </tbody>
+-        `;*/
+-
+-
+-        // Inject tables into container
+-
+-        //blank placeholder for inital table header load
+-        if (summaryFromText) {
+-            const summaryHeader = document.createElement('div');
+-            detailContainer.appendChild(summaryHeader);
+-        }
+-
+-        detailContainer.appendChild(samplingTable);
+-        if (summaryFromText) {
+-            const summaryHeader = document.createElement('div');
+-            summaryHeader.textContent = summaryFromText;
+-            summaryHeader.style.cssText = `
+-        font-weight: bold;
+-        font-size: 14px;
+-        margin: 12px 0 4px;
+-        padding: 4px 8px;
+-        background-color: #e8f0ff;
+-        border-left: 4px solid #4285f4;
+-      `;
+-            detailContainer.appendChild(summaryHeader);
+-        }
+-        detailContainer.appendChild(summaryTable);
+-
+-        // Replace floater content
+-        floaterContent.innerHTML = '';
+-        floaterContent.appendChild(detailContainer);
+-    }
+-
+-    function stylePwxDetail(){
+-
+-    }
+-
+-    function styleVisDetail(){
+-
+-    }
+-
+-    function styleRvrDetail(){
+-
+-    }
+-
+-    function styleTmpDetail(){
+-
+-    }
+-
+-    function styleWndDetail(){
+-
+-    }
+-
+-    function styleAltDetail(){
+-
+-    }
+-
+-    function styleAlmDetail(){
+-
+-    }
+-
+-    document.addEventListener('click', handleClick);
+-    restoreSnapshot();
+-})();
+-
+Index: Working copies/CFWOS AWOS Logger Utility.user.js
+===================================================================
+diff --git a/Working copies/CFWOS AWOS Logger Utility.user.js b/Working copies/CFWOS AWOS Logger Utility.user.js
+deleted file mode 100644
+--- a/Working copies/CFWOS AWOS Logger Utility.user.js	(revision 0ee9162728e0a21ab7249de2b0588d2a64935a27)
++++ /dev/null	(revision 0ee9162728e0a21ab7249de2b0588d2a64935a27)
+@@ -1,96 +0,0 @@
+-// ==UserScript==
+-// @name         CFWOS AWOS Logger Utility
+-// @namespace    AWOS
+-// @version      1.0
+-// @description  Shared logging module for AWOS scripts
+-// @author       Chris
+-// @grant        none
+-// ==/UserScript==
+-
+-(function () {
+-    'use strict';
+-
+-    // Prevent overwriting if already defined
+-    if (window.Logger) return;
+-
+-    window.Logger = {
+-        log(...args) {
+-            console.log('%c[AWOS]', 'color: #00bfff; font-weight: bold;', ...args);
+-        },
+-        group(name, fn) {
+-            console.groupCollapsed(`%c[AWOS] ${name}`, 'color: #00bfff; font-weight: bold;');
+-            try {
+-                fn();
+-            } catch (e) {
+-                console.error('Logger group error:', e);
+-            }
+-            console.groupEnd();
+-        },
+-        error(...args) {
+-            console.error('%c[AWOS ERROR]', 'color: red; font-weight: bold;', ...args);
+-        },
+-        warn(...args) {
+-            console.warn('%c[AWOS WARN]', 'color: orange; font-weight: bold;', ...args);
+-        },
+-        info(...args) {
+-            console.info('%c[AWOS INFO]', 'color: green; font-weight: bold;', ...args);
+-        }
+-    };
+-
+-    Logger.log('AWOS Logger Utility v1.0 initialized');
+-})();
+-
+-(function () {
+-    'use strict';
+-
+-    if (window.Logger) return;
+-
+-    const mutationLog = [];
+-    let layoutDispatched = false;
+-
+-    window.Logger = {
+-        log: (...args) => console.log('🟢', ...args),
+-        group: (label, fn) => {
+-            console.groupCollapsed(`📂 ${label}`);
+-            try { fn(); } catch (e) { console.error('Logger group error:', e); }
+-            console.groupEnd();
+-        },
+-        observeMutations: function () {
+-            const observer = new MutationObserver(mutations => {
+-                mutations.forEach(mutation => mutationLog.push(mutation));
+-
+-                clearTimeout(observer._debounce);
+-                observer._debounce = setTimeout(() => {
+-                    const awosPanel = document.querySelector('#awos, .awos-report, .report-panel, main');
+-                    if (awosPanel && !layoutDispatched) {
+-                        Logger.group(`${mutationLog.length} mutation(s) detected`, () => {
+-                            mutationLog.forEach((mutation, index) => {
+-                                Logger.group(`Mutation ${index + 1} [${mutation.type}]`, () => {
+-                                    Logger.log('Target', mutation.target);
+-                                    if (mutation.addedNodes.length) Logger.log('Added Nodes', mutation.addedNodes);
+-                                    if (mutation.removedNodes.length) Logger.log('Removed Nodes', mutation.removedNodes);
+-                                });
+-                            });
+-                        });
+-
+-                        window.__awosCleanupDispatched = true;
+-                        layoutDispatched = true;
+-                        window.dispatchEvent(new CustomEvent('AWOSCoreCleanupComplete'));
+-                        Logger.log('📢 AWOSCoreCleanupComplete dispatched');
+-
+-                        setTimeout(() => {
+-                            observer.disconnect();
+-                            Logger.log('Log Mutation Observer disconnected after delay');
+-                        }, 3000);
+-                    }
+-                }, 100);
+-            });
+-
+-            observer.observe(document.body, { childList: true, subtree: true });
+-            Logger.log('AWOS MutationObserver initialized');
+-        }
+-    };
+-
+-    Logger.log('AWOS Logger Utility v1.0 initialized');
+-})();
+-
+Index: Working copies/CFWOS Cleanup Suite 1.1.user.js
+===================================================================
+diff --git a/Working copies/CFWOS Cleanup Suite 1.1.user.js b/Working copies/CFWOS Cleanup Suite 1.1.user.js
+deleted file mode 100644
+--- a/Working copies/CFWOS Cleanup Suite 1.1.user.js	(revision 0ee9162728e0a21ab7249de2b0588d2a64935a27)
++++ /dev/null	(revision 0ee9162728e0a21ab7249de2b0588d2a64935a27)
+@@ -1,306 +0,0 @@
+-// ==UserScript==
+-// @name         CFWOS Cleanup Suite 1.1
+-// @namespace    chris.awos
+-// @version      1.1
+-// @description  UI fixes and enhancements for CFWOS, including AWOS restoration
+-// @match        https://met.forces.gc.ca/english/airops/AWOS*
+-// @grant        none
+-// @run-at       document-idle
+-// ==/UserScript==
+-
+-(function () {
+-    'use strict';
+-
+-    (function waitForDependencies() {
+-        if (typeof jQuery === "undefined") {
+-            Logger.log("Waiting for jQuery...");
+-            setTimeout(waitForDependencies, 250);
+-            return;
+-        }
+-
+-        setTimeout(() => {
+-            document.addEventListener("AWOSCoreReady", () => {
+-                Logger.log("✅ AWOSCoreReady received — running cleanup");
+-                CleanupSuite.run();
+-            });
+-        }, 100);
+-    })();
+-
+-    function cleanupLegacy() {
+-        Logger.group('Legacy plugin and bloat cleanup', () => {
+-            const configScripts = Array.from(document.querySelectorAll('script')).filter(script =>
+-                script.innerText.includes('djConfig','dojo','wet-boew','jquery')
+-            );
+-
+-            Logger.group(`Removed ${configScripts.length} legacy config script(s)`, () => {
+-                configScripts.forEach((script, i) => {
+-                    Logger.log(`Config Script ${i + 1}`, script);
+-                    script.remove();
+-                });
+-            });
+-
+-            const hiddenElements = Array.from(document.querySelectorAll('link, meta, input, img, script')).filter(el => {
+-                const style = getComputedStyle(el);
+-                return (
+-                    (style.display === 'none' || style.visibility === 'hidden') &&
+-                    el.textContent.trim() === '' &&
+-                    el.children.length === 0
+-                );
+-            });
+-            Logger.group(`Removed ${hiddenElements.length} hidden empty element(s)`, () => {
+-                hiddenElements.forEach((el, i) => {
+-                    Logger.log(`Hidden Element ${i + 1}`, el);
+-                    el.remove();
+-                });
+-            });
+-
+-            /*const styledElements = Array.from(document.querySelectorAll('[style]'));
+-            Logger.group(`Removed inline styles from ${styledElements.length} element(s)`, () => {
+-            styledElements.forEach((el, i) => {
+-            Logger.log(`Styled Element ${i + 1}`, el);
+-            el.removeAttribute('style');
+-            });
+-            });*/
+-
+-            Logger.log('Legacy cleanup complete ✅');
+-        });
+-    }
+-
+-    function observeLegacyScripts() {
+-        const removedScripts = [];
+-        let logTimeout;
+-
+-        const legacyScriptObserver = new MutationObserver(mutations => {
+-            mutations.forEach(mutation => {
+-                mutation.addedNodes.forEach(node => {
+-                    if (
+-                        node.tagName === 'SCRIPT' &&
+-                        node.src &&
+-                        /dojo|wet-boew|jquery/.test(node.src)
+-                    ) {
+-                        removedScripts.push(node);
+-                        node.remove();
+-                    }
+-                });
+-            });
+-
+-            // Debounce logging to group multiple removals
+-            clearTimeout(logTimeout);
+-            logTimeout = setTimeout(() => {
+-                if (removedScripts.length > 0) {
+-                    Logger.group(`📂 Removed ${removedScripts.length} legacy script(s) on-the-fly`, () => {
+-                        removedScripts.forEach((script, i) => {
+-                            Logger.log(`🧨 Legacy Script ${i + 1}`, script.src);
+-                        });
+-                    });
+-                    removedScripts.length = 0;
+-                }
+-            }, 1000);// Adjust delay if needed
+-        });
+-
+-        legacyScriptObserver.observe(document.head, { childList: true });
+-        legacyScriptObserver.observe(document.body, { childList: true });
+-
+-        setTimeout(() => {
+-            legacyScriptObserver.disconnect();
+-            Logger.log('🛑 Legacy script observer disconnected');
+-
+-        }, 5000);
+-    }
+-
+-    function runCleanup($, window, document) {
+-        "use strict";
+-
+-        const debugMode = true;
+-        const patchReport = [];
+-
+-        // ✅ Suppress ALL WET plugins
+-        const suppressedPlugins = [
+-            "wb-inview", "wb-mltmd", "wb-lbx", "wb-calevt",
+-            "wb-charts", "wb-twitter", "wb-zebra", "wb-txthl", "wb-toggle"
+-        ];
+-        suppressedPlugins.forEach(plugin => {
+-            $(document).on(`wb-init.${plugin}`, event => {
+-                event.stopImmediatePropagation();
+-                if (debugMode) Logger.log("Suppressed plugin:", plugin);
+-            });
+-        });
+-
+-        if (debugMode) {
+-            $(document).on("wb-init", event => {
+-                Logger.log("Plugin initialized:", event.namespace, event.target);
+-            });
+-        }
+-
+-        // ✅ Prevent jQuery UI dialog/datepicker from initializing
+-        $.fn.dialog = function () {
+-            if (debugMode) Logger.warn("dialog() suppressed");
+-            return this;
+-        };
+-        $.fn.datepicker = function () {
+-            if (debugMode) Logger.warn("datepicker() suppressed");
+-            return this;
+-        };
+-
+-        // ✅ Safe Dojo widget cleanup
+-        if (window.dijit?.registry?.forEach) {
+-            dijit.registry.forEach(widget => {
+-                if (!widget.domNode || !widget.domNode.offsetParent) {
+-                    widget.destroyRecursive();
+-                    if (debugMode) Logger.log("Destroyed unused Dojo widget:", widget.id);
+-                }
+-            });
+-        }
+-
+-        // ✅ Patch legacy fonts
+-        const fontKeywords = ["Wingdings", "Webdings", "Symbol"];
+-        let fontPatchCount = 0;
+-        [...document.styleSheets].forEach(sheet => {
+-            try {
+-                [...sheet.cssRules].forEach(rule => {
+-                    if (rule.style?.fontFamily) {
+-                        fontKeywords.forEach(font => {
+-                            if (rule.style.fontFamily.includes(font)) {
+-                                rule.style.fontFamily = "sans-serif";
+-                                fontPatchCount++;
+-                                if (debugMode) Logger.log(`[Font Patch] Replaced ${font}`);
+-                            }
+-                        });
+-                    }
+-                });
+-            } catch (e) {}
+-        });
+-        patchReport.push(
+-            fontPatchCount === 0
+-                ? "🔕 Font Patch: No legacy fonts found"
+-                : `✅ Font Patch: Replaced ${fontPatchCount} legacy font reference(s)`
+-        );
+-
+-        // ✅ Patch zoom styles
+-        const zoomElements = [...document.querySelectorAll("*")].filter(el => el.style.zoom);
+-        if (zoomElements.length > 0) {
+-            zoomElements.forEach(el => {
+-                const zoomValue = el.style.zoom;
+-                el.style.transform = `scale(${zoomValue})`;
+-                el.style.transformOrigin = "top left";
+-                el.style.zoom = "";
+-                if (debugMode) Logger.log(`[Zoom Patch] Applied scale(${zoomValue}) to`, el);
+-            });
+-            patchReport.push(`✅ Zoom Patch: Applied to ${zoomElements.length} element(s)`);
+-        } else {
+-            patchReport.push("🔕 Zoom Patch: No elements found using 'zoom'");
+-        }
+-
+-        // ✅ Override document.cookie
+-        try {
+-            Object.defineProperty(document, 'cookie', {
+-                configurable: true,
+-                get: function () {
+-                    Logger.log('[Cookie Patch] Accessed cookies');
+-                    return '';
+-                },
+-                set: function (val) {
+-                    Logger.log('[Cookie Patch] Blocked cookie set:', val);
+-                }
+-            });
+-            patchReport.push('✅ Cookie Patch: Getter/setter overridden');
+-        } catch (err) {
+-            Logger.warn('[Cookie Patch] Could not override document.cookie:', err.message);
+-            patchReport.push('⚠️ Cookie Patch: Override failed');
+-        }
+-
+-        // ✅ Log all XHR requests
+-        const originalOpen = XMLHttpRequest.prototype.open;
+-        XMLHttpRequest.prototype.open = function (...args) {
+-            if (debugMode) Logger.log("[XHR Patch] Request:", args);
+-            return originalOpen.apply(this, args);
+-        };
+-        const originalSend = XMLHttpRequest.prototype.send;
+-        XMLHttpRequest.prototype.send = function (...args) {
+-            if (!this.async) {
+-                Logger.warn("[XHR Patch] ⚠️ Synchronous XHR detected:", this);
+-            }
+-            return originalSend.apply(this, args);
+-        };
+-        patchReport.push("✅ XHR Patch: Logging enabled for all requests");
+-
+-        // ✅ Patch legacy styles
+-        const style = document.createElement("style");
+-        style.textContent = `
+-        .wb-zebra tr:nth-child(even) { background: none !important; }
+-        [data-wb-lbx] { display: none !important; }
+-        table.wb-tables { border-collapse: collapse; width: 100%; }
+-      `;
+-        document.head.appendChild(style);
+-
+-        // ✅ Cleanup hidden overlays
+-        setTimeout(() => {
+-            $(".wb-overlay").each(function () {
+-                if (!$(this).is(":visible")) {
+-                    $(this).remove();
+-                    if (debugMode) Logger.log("Removed hidden overlay:", this.id);
+-                }
+-            });
+-        }, 3000);
+-
+-        //Migrates scripts from Core 4.0
+-
+-
+-
+-        // ✅ Final report
+-        Logger.log("✅ AWOS Cleanup Suite complete");
+-        console.table(patchReport);
+-    }
+-
+-    const CleanupSuite = (() => {
+-        const AWOSRestorer = (() => {
+-
+-            function restoreTimePopups() {
+-                const timeElements = document.querySelectorAll('.awos-time');
+-                timeElements.forEach(el => {
+-                    el.title = el.textContent.trim();
+-                });
+-            }
+-
+-            function restoreNavButtons() {
+-                const navContainer = document.querySelector('#report-nav');
+-                if (!navContainer) return;
+-
+-                const prev = document.createElement('button');
+-                prev.textContent = 'Previous';
+-                prev.onclick = () => history.back();
+-
+-                const next = document.createElement('button');
+-                next.textContent = 'Next';
+-                next.onclick = () => history.forward();
+-
+-                navContainer.append(prev, next);
+-            }
+-
+-            return {
+-                run: () => {
+-                    restoreTimePopups();
+-                    restoreNavButtons();
+-                    Logger.log('[AWOSRestorer] AWOS fixes applied.');
+-                }
+-            };
+-        })();
+-
+-        function run() {
+-            const path = window.location.pathname;
+-            if (path.includes('/AWOS/')) {
+-                AWOSRestorer.run();
+-            }
+-
+-
+-            runCleanup(jQuery, window, document)
+-            observeLegacyScripts();
+-            cleanupLegacy();
+-
+-
+-            Logger.info ('[CleanupSuite] CFWOS Cleanup Suite complete.');
+-        }
+-
+-        return { run };
+-    })();
+-})();
+\ No newline at end of file
+Index: README.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>![AWOS Scripts Logo](logo.png)\r\n\r\n# \uD83D\uDEF0\uFE0F AWOS Scripts\r\n\r\nCustom userscripts for automating and enhancing the AWOS (Automated Weather Observing System) interface using the Violentmonkey extension.\r\n\r\nThese scripts run locally in your browser and inject functionality via DOM manipulation, mutation observers, and shared utilities. They do **not** modify AWOS source code directly.\r\n\r\n---\r\n\r\n## \uD83D\uDCE6 Script Overview\r\n\r\n### ✅ Active Scripts\r\n| Script                                                   | Description                                                                               |\r\n|----------------------------------------------------------|-------------------------------------------------------------------------------------------|\r\n| `CFWOS AWOS Core 4.1.user.js`                            | Main automation logic. Handles DOM mutations, triggers actions, and coordinates behavior. |\r\n| `CFWOS AWOS Logger Utility.user.js`                      | Centralized logging utility for consistent console output.                                |\r\n| `CFWOS AWOS Layout Enhancer 2.0.user.js`                 | Improves AWOS report layout with enhanced styling.                                        |\r\n| `CFWOS AWOS Cleanup Suite 2.0.user.js`                   | Removes clutter, legacy configs, and hidden elements.                                     |\r\n| `AWOS Floating Panel 3.5.1 (CLD Detail styling).user.js` | Adds a floating panel to the CLD Detail page.                                             |\r\n\r\n### \uD83E\uDDEA In Development\r\n| Script           | Description                                               |\r\n|------------------|-----------------------------------------------------------|\r\n| `awos-style.js`  | Injects custom CSS for readability and layout tweaks.     |\r\n| `awos-utils.js`  | Shared helper functions (selectors, timers, etc.).        |\r\n| `awos-config.js` | Optional config file for toggling features or thresholds. |\r\n\r\n### \uD83D\uDDC3\uFE0F Archived / Legacy\r\n| Script                                         | Description                                 |\r\n|------------------------------------------------|---------------------------------------------|\r\n| `AWOS Mutation Observer Core 1.9.user.js`      | Older core logic for DOM mutation handling. |\r\n| `AWOS Layout Enhancer (Full Version).user.js`  | Original layout enhancement script.         |\r\n| `AWOS Banner Refactor.user.js`                 | Reorganizes AWOS banner layout.             |\r\n| `WET Plugin Override + Remote Logging.user.js` | Suppresses unused WET plugins.              |\r\n\r\n---\r\n## \uD83D\uDEE0\uFE0F Installation Instructions\r\n\r\n### \uD83D\uDD39 Standard Installation (Recommended)\r\n\r\n1. \uD83D\uDCE5 Download the full [AWOS Scripts ZIP](https://github.com/Weedman4201985/AWOS-Scripts/archive/refs/heads/main.zip) from this repository.\r\n2. \uD83C\uDF10 Install [Violentmonkey for Firefox](https://violentmonkey.github.io/)\r\n\r\n   _Alternatively, if Firefox isn’t your browser of choice:_  \r\n   • [Violentmonkey for Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/violentmonkey/eeagobfjdenkkddmbclomhiblgggliao?hl=en&gl=US)  \r\n   • [MeddleMonkey for Mac/OSX](https://apps.apple.com/us/app/meddlemonkey/id1539631953?mt=12)\r\n\r\n3. \uD83E\uDDE9 Open the Violentmonkey/MeddleMonkey dashboard.\r\n4. ⚙\uFE0F Click **Settings**.\r\n5. \uD83D\uDCC2 Under **Backup and Maintenance**, click **Import Scripts**.\r\n6. \uD83D\uDCE6 Select the downloaded ZIP file.\r\n7. ✅ Click **\"Import\"** and wait for completion.\r\n8. \uD83D\uDD04 Ensure each script is enabled.\r\n9. \uD83D\uDCD1 Confirm scripts are in the recommended load order.\r\n10. \uD83C\uDFC1 Close the dashboard.\r\n\r\n---\r\n\r\n<details>\r\n  <summary>\uD83E\uDDED Alternative Installation Methods</summary>\r\n\r\n### \uD83D\uDD38 Manual Script Import (Individual Files)\r\n\r\n1. Download each script manually:\r\n    - [CFWOS AWOS Cleanup Suite 2.0](https://github.com/Weedman4201985/AWOS-Scripts/blob/main/CFWOS%20AWOS%20Cleanup%20Suite%202.0.user.js)\r\n    - [CFWOS AWOS Core 4.1](https://github.com/Weedman4201985/AWOS-Scripts/blob/main/CFWOS%20AWOS%20Core%204.1.user.js)\r\n    - [CFWOS AWOS Layout Enhancer 2.0](https://github.com/Weedman4201985/AWOS-Scripts/blob/main/CFWOS%20AWOS%20Layout%20Enhancer%202.0.user.js)\r\n    - [CFWOS AWOS Logger Utility](https://github.com/Weedman4201985/AWOS-Scripts/blob/main/CFWOS%20AWOS%20Logger%20Utility.user.js)\r\n    - [AWOS Floating Panel 3.5.1 (CLD Detail styling)](https://github.com/Weedman4201985/AWOS-Scripts/blob/main/AWOS%20Floating%20Panel%203.5.1%20(CLD%20Detail%20styling).user.js)\r\n\r\n2. Open the Violentmonkey/MeddleMonkey dashboard.\r\n3. Drag each downloaded script into the dashboard window.\r\n4. Click **\"Import\"** and wait for completion.\r\n5. Confirm recommended load order.\r\n6. Close the dashboard.\r\n\r\n---\r\n\r\n### \uD83D\uDD38 Manual Copy-Paste Method\r\n\r\n1. Open the script file on GitHub and click **Raw**.\r\n2. Copy the entire script content.\r\n3. Open the Violentmonkey/MeddleMonkey dashboard.\r\n4. Click **\"+\"** to create a new script.\r\n5. Paste the script into the editor.\r\n6. Click **\"Save\"** and wait for completion.\r\n7. Confirm recommended load order.\r\n8. Close the dashboard.\r\n\r\n</details>\r\n---\r\n\r\n## \uD83D\uDD01 Recommended Load Order\r\n\r\nTo ensure dependencies are available before scripts that rely on them:\r\n\r\n1. `CFWOS AWOS Logger Utility.user.js`\r\n2. `CFWOS AWOS Core 4.1.user.js`\r\n3. `CFWOS AWOS Cleanup Suite 2.0.user.js`\r\n4. `CFWOS AWOS Layout Enhancer 2.0.user.js`\r\n5. `AWOS Floating Panel 3.5.1 (CLD Detail styling).user.js`\r\n\r\n---\r\n\r\n## \uD83E\uDDE0 Notes\r\n\r\n- Scripts are injected locally via Violentmonkey and are not hosted externally.\r\n- If your Firefox profile or extension is deleted, you can restore scripts by re-downloading them from this repo.\r\n- All scripts are written in vanilla JavaScript and designed to be modular and maintainable.\r\n\r\n---\r\n\r\n## \uD83D\uDCCC License\r\n\r\nMIT License — feel free to use, modify, and share.\r\n\r\n---\r\n\r\n## \uD83D\uDE4B\u200D♂\uFE0F Author\r\n\r\nCreated and maintained by **Chris**.  \r\nSuggestions? Open an issue or submit a pull request.
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/README.md b/README.md
+--- a/README.md	(revision 0ee9162728e0a21ab7249de2b0588d2a64935a27)
++++ b/README.md	(date 1756161807315)
+@@ -39,7 +39,7 @@
+ 
+ ### 🔹 Standard Installation (Recommended)
+ 
+-1. 📥 Download the full [AWOS Scripts ZIP](https://github.com/Weedman4201985/AWOS-Scripts/archive/refs/heads/main.zip) from this repository.
++1. 📥 Download the full [AWOS Scripts ZIP](https://github.com/Weedman4201985/AWOS-Scripts/tree/main/Working%20copies) from this repository.
+ 2. 🌐 Install [Violentmonkey for Firefox](https://violentmonkey.github.io/)
+ 
+    _Alternatively, if Firefox isn’t your browser of choice:_  
