@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         CFWOS AWOS Core 8.4
-// @version      8.4(Consolodation pass)
-// @description  AWOS Core 8.4(Consolodation pass)
+// @name         CFWOS AWOS Core 9.0
+// @version      9.0
+// @description  AWOS Core 9.0
 // @author       Chris
 // @match        https://met.forces.gc.ca/english/airops/AWOS/*
 // @match        http://localhost/english/AWOS/*
@@ -425,27 +425,27 @@ if (localStorage.getItem('refreshEnabled') === null) {
     // window.simulateTimeBlock = simulateTimeBlock;
 
     (function Core8x() {
-        Logger.perf('start', 'Core8x');
-        Logger.info('✅[Core8x] Loading AWOS modifications...');
+        Logger.perf('start', 'Core9x');
+        Logger.info('✅Core9x] Loading AWOS modifications...');
 
         // Set cookie
         document.cookie = `metweb_settings=setting_norefresh&${REFRESH_INTERVAL}`;
 
         // Set UI suppression flag
         window.isReportViewer = window.self !== window.top;
-        Logger.info(`[Core8x] UI Suppression: ${ window.isReportViewer ? 'ON (iframe)' : 'OFF (main window)'}`);
+        Logger.info(`[Core9x] UI Suppression: ${ window.isReportViewer ? 'ON (iframe)' : 'OFF (main window)'}`);
 
 
         window.addEventListener('DOMContentLoaded', () => {
 
-            Logger.info('🧭[Core8x] DOM Initialization start');
+            Logger.info('🧭[Core9x] DOM Initialization start');
 
             // === UI Setup ===
             interceptMouseoverPopups();
 
-            Logger.perf('stop', 'Core8x');
+            Logger.perf('stop', 'Core9x');
             Logger.modules.register('core');
-            Logger.info('🧭[Core8x] DOM fully loaded');
+            Logger.info('🧭[Core9x] DOM fully loaded');
 
         });
     })();
@@ -453,7 +453,7 @@ if (localStorage.getItem('refreshEnabled') === null) {
 /*
 
     ─────────────────────────────────────────────
-     🧭 AWOS Logger Performance Legend — Core 8.x
+     🧭 AWOS Logger Performance Legend — Core 9.x
     ─────────────────────────────────────────────
 
     Logger.perf('start', 'Label')     // Start stopwatch
@@ -521,90 +521,7 @@ if (localStorage.getItem('refreshEnabled') === null) {
         args = rest.slice(1);
       }
       console.log(`🟢%c ${message}`, style, ...args);
-    }
-
-
-
-        ───────────────────────────────────────────────
-    🧭 CFWOS AWOS Core 8.x — System Flow Spec
-    ───────────────────────────────────────────────
-
-    🚀 Phase 0 — Logger Core IIFE (first code to run)
-
-        ** Critical dependency **
-        All other scripts (Core logic, Cleanup Suite, Layout Enhancer, etc.)
-        assume Logger exists. If this IIFE fails, the entire AWOS stack fails.
-        ** Critical dependency **
-
-
-        - Self-contained IIFE at very top of Core file
-        - Defines global Logger object with:
-        • Logger.info(), Logger.warn(), Logger.error()
-        • Logger.log()
-        • Logger.group()
-        • Logger.perf()
-        • Logger.perfWrap()
-        • Logger.perfMark()
-        • Logger.modules.register()
-            .whenReady()
-
-          📢 Logging details:
-            • Logger.info(): lifecycle milestones (UI suppression, injections, registry)
-    • Logger.log(): detailed, granular debug/info (XHR, cookie access, mutation summaries)
-    • Logger.warn(): duplicate module registration, skipped mutations
-            • Logger.error():
-    • Logger.group(): grouped console output
-            • Logger.perf('start'/'stop', label): perf timing spans
-            • Logger.perfWrap(fn, label): wraps a function with perf timing
-            • Logger.perfMark(label): drop a named checkpoint
-            • Logger.modules.register(name): Registers modules
-            .whenReady(deps, fn) listens for registered modules
-
-          📦 Module system
-        - register('core') after DOM ready
-        - Other modules listen via Logger.modules.whenReady(['core'], ...)
-        - Cleanup Suite signals completion by register('cleanup')
-        - register() ignores duplicate names; whenReady() dedupes queued callbacks
-
-
-    🚀 Phase 1 — Early patch phase
-        - Runs before DOMContentLoaded
-        - waitForHeadAndInjectFavicon(): injects dummy favicon
-        - patchZoom(): replaces CSS zoom with transform: scale
-        - Optional patches: font block, cookie override, XHR logging
-        - Logs patch summary via Logger
-
-    🧠 Phase 2 — DOM/UI setup (DOMContentLoaded)
-        - setupTopBar():
-    • Creates manual top bar container with id #awos-top-bar
-        • Defines “zones” (e.g., topLeft, topRight) for button placement
-        • Appends to DOM early so observers can filter it out
-        - interceptMouseoverPopups(), findAllMouseoverElements(): UI helpers for AWOS hover elements
-        - Conditional UI suppression:
-            • window.awosSuppressUI = (window.self !== window.top)
-        • If suppressed: skip all UI injections
-        • If not suppressed: inject full UI suite
-
-    📦 UI Injection Suite (if not suppressed)
-        1) **Auto-Refresh Toggle** (injectAutoRefreshToggle)
-        - Persistent text node label (no DOM bloat)
-        - setInterval tick every 1000 ms updates countdown
-        - BroadcastChannel 'awos-refresh-sync' broadcasts {enabled, secondsLeft}
-        - forcePageReload() when countdown hits 0 or on re-enable
-        - Countdown mutations excluded from Cleanup observer via #awos-top-bar filter
-        2) **Report Viewer Button**
-        - Opens stored AWOS report snapshots from localStorage
-        - Restores state into viewer panel
-        3) **Debug Button**
-        - Toggles debug logging and/or UI overlays
-        - May expose extra Logger output for dev mode
-        4) **New Stations Button**
-        - Opens station management UI
-        - Allows adding/removing monitored stations
-        5) **Reset Floater Button**
-        - Clears floater position/state from localStorage
-        - Forces reinitialization on next load
-        - removeLegacyScripts() runs after UI injection to strip old AWOS scripts/styles
+}
 
     ───────────────────────────────────────────────
     // Quick reference for testAutoNightMode(hour, minute) and

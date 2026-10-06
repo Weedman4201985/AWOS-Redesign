@@ -4,9 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="24fc00a6-105d-480d-9e3e-b135ff8da7a6" name="Changes" comment="AMEND: First commit of new repo">
+    <list default="true" id="24fc00a6-105d-480d-9e3e-b135ff8da7a6" name="Changes" comment="Fixed dark mode bugs">
+      <change afterPath="$PROJECT_DIR$/Dev/CFWOS Cleanup Suite 5.user.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dev/CFWOS Layout Enhancer 4.1.user.js" beforeDir="false" afterPath="$PROJECT_DIR$/Dev/CFWOS Layout Enhancer 4.1.user.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dev/CFWOS AWOS Core 8.3.user.js" beforeDir="false" afterPath="$PROJECT_DIR$/Dev/CFWOS AWOS Core 9.0.user.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dev/CFWOS Cleanup Suite 4.user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dev/CFWOS Floating Panel 6.1.user.js" beforeDir="false" afterPath="$PROJECT_DIR$/Dev/CFWOS Floating Panel 6.2.user.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dev/CFWOS Layout Enhancer 4.1.user.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dev/CFWOS XML Prototype 0.3(station selection).user.js" beforeDir="false" afterPath="$PROJECT_DIR$/Dev/CFWOS XML Prototype 0.3(station selection).user.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -208,7 +213,9 @@
       <workItem from="1791155308300" duration="236000" />
       <workItem from="1791155555871" duration="138000" />
       <workItem from="1791155711315" duration="12720000" />
-      <workItem from="1791170463067" duration="10000" />
+      <workItem from="1791170463067" duration="53000" />
+      <workItem from="1791234491588" duration="6834000" />
+      <workItem from="1791255430446" duration="1111000" />
     </task>
     <task id="LOCAL-00001" summary="Full commit of entire AWOS redesign project">
       <option name="closed" value="true" />
@@ -274,7 +281,15 @@
       <option name="project" value="LOCAL" />
       <updated>1791168906444</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Fixed dark mode bugs">
+      <option name="closed" value="true" />
+      <created>1791170505706</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1791170505706</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -311,6 +326,7 @@
     <MESSAGE value="delete test file" />
     <MESSAGE value="Added dev copies for all active userscripts." />
     <MESSAGE value="AMEND: First commit of new repo" />
-    <option name="LAST_COMMIT_MESSAGE" value="AMEND: First commit of new repo" />
+    <MESSAGE value="Fixed dark mode bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed dark mode bugs" />
   </component>
 </project>

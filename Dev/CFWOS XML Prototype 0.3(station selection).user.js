@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         CFWOS XML Prototype 0.3(station selection)
+// @name         CFWOS XML Prototype 0.3
 // @namespace    cfwos
-// @version      0.2
+// @version      0.3
 // @description  XML-first CFWOS prototype with station selection
 // @match        https://met.forces.gc.ca/english/airops/AWOS/*
 // @grant        none
